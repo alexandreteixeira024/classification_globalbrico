@@ -1,0 +1,19 @@
+# Credenciais
+.env
+.env.*
+
+# Python
+.GB/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# Modelos e resultados gerados
+src/models/

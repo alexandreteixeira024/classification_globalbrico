@@ -1,0 +1,9 @@
+torch>=2.6
+transformers>=5.17,<6
+accelerate>=1.0
+sentencepiece>=0.2
+protobuf>=4
+openpyxl>=3.1
+pandas>=2.0
+scikit-learn>=1.5,<2
+requests>=2.31

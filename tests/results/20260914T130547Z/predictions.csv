@@ -1,0 +1,79 @@
+﻿uid,correct,model,predicted,latency_seconds,raw_output
+27391,Pedido de Informação,XLM-RoBERTa fine-tuned,Pedido de Informação,0.06254729098873213,Pedido de Informação
+27390,Pedido de Informação,XLM-RoBERTa fine-tuned,Pedido de Informação,0.08276770799420774,Pedido de Informação
+27182,Pedido de Informação,XLM-RoBERTa fine-tuned,Pedido de Informação,0.056386916956398636,Pedido de Informação
+27018,SPAM,XLM-RoBERTa fine-tuned,SPAM,0.08355337503599003,SPAM
+27009,SPAM,XLM-RoBERTa fine-tuned,SPAM,0.08248045900836587,SPAM
+26995,Pedido de Informação,XLM-RoBERTa fine-tuned,Pedido de Informação,0.08489724999526516,Pedido de Informação
+26779,SPAM,XLM-RoBERTa fine-tuned,SPAM,0.05577979201916605,SPAM
+26730,SPAM,XLM-RoBERTa fine-tuned,SPAM,0.08263358299154788,SPAM
+26666,Pedido de Informação,XLM-RoBERTa fine-tuned,Pedido de Informação,0.05464512499747798,Pedido de Informação
+26591,Pedido de Informação,XLM-RoBERTa fine-tuned,Pedido de Informação,0.08321537502342835,Pedido de Informação
+26505,Pedido de Informação,XLM-RoBERTa fine-tuned,Pedido de Informação,0.08339041704311967,Pedido de Informação
+26057,Pedido de Informação,XLM-RoBERTa fine-tuned,Pedido de Informação,0.08218862500507385,Pedido de Informação
+26054,Pedido de Informação,XLM-RoBERTa fine-tuned,Pedido de Informação,0.08046620897948742,Pedido de Informação
+26016,Pedido de Informação,XLM-RoBERTa fine-tuned,Pedido de Informação,0.06173429201589897,Pedido de Informação
+26007,Pedido de Informação,XLM-RoBERTa fine-tuned,Pedido de Informação,0.07415770902298391,Pedido de Informação
+26004,SPAM,XLM-RoBERTa fine-tuned,SPAM,0.07628000003751367,SPAM
+25980,SPAM,XLM-RoBERTa fine-tuned,SPAM,0.08258608297910541,SPAM
+25634,Pedido de Informação,XLM-RoBERTa fine-tuned,Pedido de Informação,0.054009417013730854,Pedido de Informação
+24501,Pedido de Informação,XLM-RoBERTa fine-tuned,Pedido de Informação,0.08184666698798537,Pedido de Informação
+24351,Pedido de Informação,XLM-RoBERTa fine-tuned,Pedido de Informação,0.08251645800191909,Pedido de Informação
+22737,Pedido de Encomenda,XLM-RoBERTa fine-tuned,SPAM,0.046695000026375055,SPAM
+22683,Pedido de Informação,XLM-RoBERTa fine-tuned,Pedido de Informação,0.08265995798865333,Pedido de Informação
+22561,SPAM,XLM-RoBERTa fine-tuned,SPAM,0.08162308298051357,SPAM
+22545,SPAM,XLM-RoBERTa fine-tuned,SPAM,0.08065279200673103,SPAM
+21288,Pedido de Informação,XLM-RoBERTa fine-tuned,Pedido de Informação,0.038701290963217616,Pedido de Informação
+21173,Pedido de Informação,XLM-RoBERTa fine-tuned,Pedido de Informação,0.08248799998546019,Pedido de Informação
+27391,Pedido de Informação,Phi-4-mini-instruct,Pedido de Encomenda,0.5339714580331929,"{""label"": ""Pedido de Encomenda""}"
+27390,Pedido de Informação,Phi-4-mini-instruct,Pedido de Encomenda,1.3112069580238312,"{""label"": ""Pedido de Encomenda""}"
+27182,Pedido de Informação,Phi-4-mini-instruct,Pedido de Encomenda,1.0081937920185737,"{""label"": ""Pedido de Encomenda""}"
+27018,SPAM,Phi-4-mini-instruct,Pedido de Informação,0.7065788750187494,"{""label"": ""Pedido de Informação""}"
+27009,SPAM,Phi-4-mini-instruct,Pedido de Informação,0.689458624983672,"{""label"": ""Pedido de Informação""}"
+26995,Pedido de Informação,Phi-4-mini-instruct,Pedido de Encomenda,0.6665451670414768,"{""label"": ""Pedido de Encomenda""}"
+26779,SPAM,Phi-4-mini-instruct,Pedido de Encomenda,0.5840986669645645,"{""label"": ""Pedido de Encomenda""}"
+26730,SPAM,Phi-4-mini-instruct,Pedido de Encomenda,0.6648937090067193,"{""label"": ""Pedido de Encomenda""}"
+26666,Pedido de Informação,Phi-4-mini-instruct,Pedido de Encomenda,1.3697145420010202,"{""label"": ""Pedido de Encomenda""}"
+26591,Pedido de Informação,Phi-4-mini-instruct,Pedido de Encomenda,0.7950944170006551,"{""label"": ""Pedido de Encomenda""}"
+26505,Pedido de Informação,Phi-4-mini-instruct,Pedido de Encomenda,0.6554007499944419,"{""label"": ""Pedido de Encomenda""}"
+26057,Pedido de Informação,Phi-4-mini-instruct,Pedido de Encomenda,1.1398170830216259,"{""label"": ""Pedido de Encomenda""}"
+26054,Pedido de Informação,Phi-4-mini-instruct,Pedido de Encomenda,0.51494525000453,"{""label"": ""Pedido de Encomenda""}"
+26016,Pedido de Informação,Phi-4-mini-instruct,Pedido de Encomenda,0.9778482500114478,"{""label"": ""Pedido de Encomenda""}"
+26007,Pedido de Informação,Phi-4-mini-instruct,Pedido de Encomenda,0.6253130420227535,"{""label"": ""Pedido de Encomenda""}"
+26004,SPAM,Phi-4-mini-instruct,Pedido de Encomenda,0.6224946659640409,"{""label"": ""Pedido de Encomenda""}"
+25980,SPAM,Phi-4-mini-instruct,Pedido de Encomenda,0.6721714590094052,"{""label"": ""Pedido de Encomenda""}"
+25634,Pedido de Informação,Phi-4-mini-instruct,Pedido de Encomenda,0.9473805829766206,"{""label"": ""Pedido de Encomenda""}"
+24501,Pedido de Informação,Phi-4-mini-instruct,Pedido de Encomenda,0.6643583749537356,"{""label"": ""Pedido de Encomenda""}"
+24351,Pedido de Informação,Phi-4-mini-instruct,Pedido de Encomenda,0.6650741249904968,"{""label"": ""Pedido de Encomenda""}"
+22737,Pedido de Encomenda,Phi-4-mini-instruct,Pedido de Informação,0.5247777079930529,"{""label"": ""Pedido de Informação""}"
+22683,Pedido de Informação,Phi-4-mini-instruct,Pedido de Encomenda,0.6841726659913547,"{""label"": ""Pedido de Encomenda""}"
+22561,SPAM,Phi-4-mini-instruct,Pedido de Encomenda,0.532258459017612,"{""label"": ""Pedido de Encomenda""}"
+22545,SPAM,Phi-4-mini-instruct,Pedido de Encomenda,0.5393454160075635,"{""label"": ""Pedido de Encomenda""}"
+21288,Pedido de Informação,Phi-4-mini-instruct,Pedido de Encomenda,0.7485504999640398,"{""label"": ""Pedido de Encomenda""}"
+21173,Pedido de Informação,Phi-4-mini-instruct,Pedido de Encomenda,0.5256063750130124,"{""label"": ""Pedido de Encomenda""}"
+27391,Pedido de Informação,Ollama,Pedido de Informação,0.3647089159931056,"{""label"": ""Pedido de Informação""}"
+27390,Pedido de Informação,Ollama,Pedido de Informação,1.0328362919972278,"{""label"": ""Pedido de Informação""}"
+27182,Pedido de Informação,Ollama,Pedido de Informação,0.7651516249752603,"{""label"": ""Pedido de Informação""}"
+27018,SPAM,Ollama,SPAM,0.34067541698459536,"{""label"": ""SPAM""}"
+27009,SPAM,Ollama,SPAM,0.32781470904592425,"{""label"": ""SPAM""}"
+26995,Pedido de Informação,Ollama,Pedido de Informação,0.374032250023447,"{""label"": ""Pedido de Informação""}"
+26779,SPAM,Ollama,SPAM,0.3184692499926314,"{""label"": ""SPAM""}"
+26730,SPAM,Ollama,Pedido de Informação,0.3636600829777308,"{""label"": ""Pedido de Informação""}"
+26666,Pedido de Informação,Ollama,Pedido de Informação,0.7627789580146782,"{""label"": ""Pedido de Informação""}"
+26591,Pedido de Informação,Ollama,Pedido de Informação,0.37034374999348074,"{""label"": ""Pedido de Informação""}"
+26505,Pedido de Informação,Ollama,Pedido de Informação,0.36533054197207093,"{""label"": ""Pedido de Informação""}"
+26057,Pedido de Informação,Ollama,Pedido de Informação,0.9656632090336643,"{""label"": ""Pedido de Informação""}"
+26054,Pedido de Informação,Ollama,Pedido de Informação,0.3613293750095181,"{""label"": ""Pedido de Informação""}"
+26016,Pedido de Informação,Ollama,Pedido de Informação,0.36047295801108703,"{""label"": ""Pedido de Informação""}"
+26007,Pedido de Informação,Ollama,Pedido de Encomenda,0.3912804169813171,"{""label"": ""Pedido de Encomenda""}"
+26004,SPAM,Ollama,Pedido de Encomenda,0.3871310420217924,"{""label"": ""Pedido de Encomenda""}"
+25980,SPAM,Ollama,Pedido de Informação,0.3662007499951869,"{""label"": ""Pedido de Informação""}"
+25634,Pedido de Informação,Ollama,Pedido de Informação,0.7638391249929555,"{""label"": ""Pedido de Informação""}"
+24501,Pedido de Informação,Ollama,Pedido de Informação,0.3696918750065379,"{""label"": ""Pedido de Informação""}"
+24351,Pedido de Informação,Ollama,Pedido de Informação,0.36590820900164545,"{""label"": ""Pedido de Informação""}"
+22737,Pedido de Encomenda,Ollama,Pedido de Informação,0.3678503750124946,"{""label"": ""Pedido de Informação""}"
+22683,Pedido de Informação,Ollama,Pedido de Informação,0.3720797080313787,"{""label"": ""Pedido de Informação""}"
+22561,SPAM,Ollama,Pedido de Informação,0.3673591669648886,"{""label"": ""Pedido de Informação""}"
+22545,SPAM,Ollama,Pedido de Informação,0.3621824170113541,"{""label"": ""Pedido de Informação""}"
+21288,Pedido de Informação,Ollama,Pedido de Informação,0.5557545409537852,"{""label"": ""Pedido de Informação""}"
+21173,Pedido de Informação,Ollama,Pedido de Informação,1.7460728750447743,"{""label"": ""Pedido de Informação""}"
