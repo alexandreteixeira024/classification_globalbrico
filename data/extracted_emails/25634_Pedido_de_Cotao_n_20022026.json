@@ -1,5 +1,16 @@
 {
   "uid": "25634",
+  "message_id": "<d9189b4ff0777cd37e3d84d8f98254ac@normolde.pt>",
+  "in_reply_to": " <CAC-5hdFVF=1LpvYOzV7Bfb+L+mLKOs5udfUgSpEcidA8Sc_iCw@mail.gmail.com>",
+  "references": [
+    "<006a01dc3c21$ec15ef00$c441cd00$@normolde.pt>",
+    "<CAB2xgFsfddo-MUOFFasbcBfWZT8v1QeJr4ttHwHKpoaGPOr_bg@mail.gmail.com>",
+    "<CAC-5hdG3P+zfFRVRutpTRUtCd5XMtQv=oL7oMNV1KZM=momjHg@mail.gmail.com>",
+    "<CAC-5hdE_2=zN86qQk9R-ZxkCaFmOi1rk7zcBi1c9dBcmTASj_g@mail.gmail.com>",
+    "<CAC-5hdFvkRACi1eWcmsYJ+Vs5mCYa9CW8Td8Kr=STZiyeO8Pyg@mail.gmail.com>",
+    "<CAC-5hdG7+7e1CpM331AtV6gTJZOJZ5JTyR6cq6jfUM6XwuxubA@mail.gmail.com>",
+    "<CAC-5hdFVF=1LpvYOzV7Bfb+L+mLKOs5udfUgSpEcidA8Sc_iCw@mail.gmail.com>"
+  ],
   "subject": "Pedido de Cotação nº 20/02/2026",
   "from": "NORMOLDE | Compras <geral@somax.com.pt>",
   "to": "undisclosed-recipients:;",
@@ -10,7 +21,8 @@
     {
       "filename": "Pedido de Cotação nº 20022026_pdf.r00",
       "content_type": "application/x-rar",
-      "size_bytes": 2187
+      "size_bytes": 2187,
+      "content_base64": "UmFyIRoHAQDz4YLrCwEFBwAGAQGAgIAAZE1VDkACAwumEASFGyCajVZggAMAJFBlZGlkbyBkZSBDb3Rhw6fDo28gbsK6IDIwMDIyMDI2LmJhdAoDAuncpoFmotwByroiCEd0RDI0RfJQZfFbzcNxtwxmIeDx9OGRxISR2NpAjob4+OELotISEjUkNA9x893NAmx42w2MexHIjnhibQrurqqmZu6u0vHrqpqrrt/T/+U+MZIZWoo3Gn35zWZonFK7AzDLHJnfFxx1llqAn7N5YGJHYRZajjXgLCTfmNxMxiBNmZIm18NGeLDy8UgxnZZYaP04+An8k9MI3hoN5BZfd6du2HTh24Pdwdf8W44BfiazCxAvQZ8MXLycNH0Inbtx7u3JQHKh5EB5kdfB/fD9T3wbct8vZSUl3/ANXYzKWVxeQyKnCyHYohIoGouD1bbUeyNCQabM3ZXgXdZDibMjyhpEwMMrRo0Py5hmSSjvYYZWXxgbwMoeIwmHWjMhZaNf8GmTY8b2U1zaJ70zu3sA67eHQ6xoBtzzpP+aXd2E7BONJkzNcn3+4IyKK/fN73SX5zLxHmndSLx0C9pcRMuXD/3Rm++iH5E+USugn20dpsN0hLQivwSQ1/uJixTHHCAZ+AgvkOsiihGvDRFc0MTbNkEgCwyvUizcgT29weSfpkHaFh7PkdDTaoZhCRFRO4P/dezGYoYxcyiEk052Bt1gXXDSx/zh2HMoio8ZnyQSJnVtgNhE+DCAEeLzdDWGIcZnMHpqCTPsH2QC2WJdjRR/1v8/NNnz6Bu583n5R4OONa5DedcDcHoxPv8fHymAnXzR2yZNhizh1mRP0IV3mVQRcYlYPRjOuHAOQYFjM3BGLnF0xODaRcxWgMzA/KLZWAK6xirk2EwHkRmQLOPYvnnjADMwWg+OiXQz+fnMMMRAHaY00MTw/xbfM9j8ysBZrycdCf+qiUamTCQwlJnzv06c2FtsmEk2Bca2PkI50CkKRHWakmyRE/H4ivDpcUKsXdKjh0ducQ9IiCAlHZ2QYME7wqajRM2YPRZ0goM7hSl0HnzehvWTNAi06Hv/pjNFIJaS5GQk+InFrW7f1LqUBDCy9qSEnBarTlnTW4EyJlf1N+xomHkPb+fzIJ8DWzOBOCJGRU1NN/7fadwbw0HcziSGzidD87h2UbR58bcIzzXijGSuxg+FbGyKR43ceV+T80GtvsuiJFGuIW5NNjGcHTOg8CftUH8uzIa3FAamccchtO24sorM8BNtR8A2RwZqBftkYH/CCSyNPXBwcCqJMOe/t8WR3STbvE4gRhfDtEKbp1gwlI5u4/DwjYj8425xGEo+nCR+vF9qw9xv+/783d5fooJcI4JKOi/DQ/19ZAxnMYR3VXmwwv0QD9FnWD6bf3nzlyakCGgW1SN1tJ0MiMZcs5canwh7lyjN7+/tIUtwCCArEizEJjDcKUSwdJY8ZIBQywNbYUCIM/jUEmshnsGsWt3V9HQH3GO3nj1wOWwJzaRpiqQA1UUH53YOqZEkmqM6jJDotij2QQYBDHDpJZYJoFCjj730x1MM/SYiYhlAY/CThiFQa4p/sfH4/E1FrpuYM2vhvT565JzI3SjyOEC8nkNogQf89O4y8vbnYo+uXZgsDf8BViq7MNfh5jGfWMGHtxy712fmbUWlCUPhp1FS21UTudVO1SUuptreNC0ikrhvPKWL89DsWcOC/vVmVhLKSryWJMAOtES8L4PyN4d21DuaBFRKyeU6uomgoqsMI3FmC6C147gpSLgwibM1hJI6YF8F8+6d1UpTrp8qtdIX61xRizfKlYpqRqIP1UxhqVKR51ykcxaTnq3b2I5MA8r9+VlcGlL+E1Z7aM9h0R0MSVKyxVQS+oImDnANLR3un19Zrz2UbWt1egZo7HKQXoSjZb/u29EHHLPndURQ223ZVxZFETK2hdoKpSpWwrQYqTitVFxJZOUqh89+wCKcigWypvEn+7E1kAm66ObsWCVq3KeayD0sxfScoU01s18J8tZE5wJnqBBhww3TKcheKYu/2lvVclrh9BsATgWpygk2kJTwSMHzAHzJiKlvdZzl2yVJSoMewgG+ZNyVmkH+yDEANSfyXtkt9NE5j3gOMprtOHw2xv54Cliaw0d/3Vshm5kk3qEB6t1uqfZ6hr6opi8yY8iEu5UDsDwUeuHBtc6NqbcG5koDEuDBJBXPLUC0jE2Kfn6xbv0zuaMAxy1lBhoIxI+pb9Md3kZuo8/WLynWeg9VMSq/miB7J3Suw7eqKzh2BGUEekee9TlspG9SHHYt1x7Dxx6iekEbmhp2wbmKalDrCgYYcs4QLHVlVgrEwFXR+0LA7PviG2UXRtZJGsY5yWqP9B8APc1uPMeaYDyC1xHBfqBhWqiimk/WsJAdRqaOsK9DcPuw7NYSgwfaN897CuyPRYN/fuTTJUPwAoQwJiLBPrPLAxKSoBFYOo8TtdDMxs1i9dD35XO4XrIRNdALfDfWO2Utf/A8k97ZQpQupJcloFigyiofVtqc1pJV6vbe571wWxV8pXG/qvSB1Y1vOun+9TUyMcbsnd5D2iD5TqPHQ+nJz8o3ZOvxvG+KyjP5OT6/T3SEhsNAr8XPLGesGdQLB19CWrhQPeVG0Kp7+R7MmC3bB7oZ60p2kopeQ8VWrwQoQ5Rx+oMVFU486QqjpFur2xM7ACWLBr9YYfYv/hP9SoCTaPVOBSu82TqAGwgJ44CQIdBQ4TnE+HSkYT8YS23Vr9PxqqHj+riGyWBvRgpuIWP8Jzbp5o7SKpbJ7/PeBV5kakstcct8TtwfoiRJ6cqVO4mBIGjAeDPPAnKfVGhrNI+FYAvnn77UbifSPuvNN9Pxt5cmSEg/XUs0hAq3yj5yiefw6m9NJK2dloP4YXT+wB13VlEDBQQA"
     }
   ],
   "folder": "INBOX"

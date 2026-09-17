@@ -1,4 +1,5 @@
 import argparse
+import base64
 import getpass
 import imaplib
 import json
@@ -9,6 +10,8 @@ import sys
 from email import policy
 from email.parser import BytesParser
 from pathlib import Path
+
+EMAIL_INGEST_OUTPUT_DIR='./data/extracted_emails'
 
 
 def load_env(path):
@@ -63,7 +66,7 @@ def strip_html(text):
     return text.strip()
 
 
-def serialize_email(message):
+def serialize_email(message, with_attachment_content=True, max_attachment_bytes=3_000_000):
     subject = message.get("Subject", "(sem assunto)")
     sender = message.get("From", "(remetente desconhecido)")
     to = message.get("To", "(destinatario desconhecido)")
@@ -74,6 +77,10 @@ def serialize_email(message):
 
     for part in message.walk():
         if part.is_multipart():
+            continue
+
+        # nao misturar anexos com o corpo da mensagem
+        if part.get_filename() or (part.get_content_disposition() == "attachment"):
             continue
 
         content_type = part.get_content_type()
@@ -88,16 +95,20 @@ def serialize_email(message):
     attachments = []
     for part in message.iter_attachments():
         payload = part.get_payload(decode=True) or b""
-        attachments.append(
-            {
-                "filename": part.get_filename() or "anexo",
-                "content_type": part.get_content_type(),
-                "size_bytes": len(payload),
-            }
-        )
+        item = {
+            "filename": part.get_filename() or "anexo",
+            "content_type": part.get_content_type(),
+            "size_bytes": len(payload),
+        }
+        if with_attachment_content and 0 < len(payload) <= max_attachment_bytes:
+            item["content_base64"] = base64.b64encode(payload).decode("ascii")
+        attachments.append(item)
 
     return {
-        "uid": message.get("X-Original-UID") or None,
+        "uid": None,
+        "message_id": message.get("Message-ID"),
+        "in_reply_to": message.get("In-Reply-To"),
+        "references": (message.get("References") or "").split(),
         "subject": subject,
         "from": sender,
         "to": to,
@@ -111,7 +122,10 @@ def serialize_email(message):
 def load_seen_state(path):
     if not path.exists():
         return {}
-    return json.loads(path.read_text(encoding="utf-8"))
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
 
 
 def last_saved_uid(output_dir, folder):
@@ -128,7 +142,17 @@ def last_saved_uid(output_dir, folder):
     return max(saved, default=0)
 
 
-def extract_recent_emails(host, port, username, password, limit=10, timeout=60, output_dir=None, folder="INBOX"):
+def extract_recent_emails(
+    host,
+    port,
+    username,
+    password,
+    limit=10,
+    timeout=60,
+    output_dir=None,
+    folder="INBOX",
+    reprocess_all=False,
+):
     if not folder.strip() or any(char in folder for char in "\r\n\x00"):
         raise ValueError("E necessario indicar uma pasta IMAP valida.")
     output_dir = Path(output_dir or Path(__file__).resolve().parent.parent / "data/extracted_emails")
@@ -151,9 +175,8 @@ def extract_recent_emails(host, port, username, password, limit=10, timeout=60, 
         if status != "OK":
             raise RuntimeError("Nao foi possivel pesquisar os emails.")
 
-        uids = sorted((data[0] or b"").split(), key=int, reverse=True)
-        selected = uids[:limit] if limit else uids
-        print(f"Emails na pasta {folder}: {len(uids)}. A extrair: {len(selected)}.", flush=True)
+        # ordem CRESCENTE: processa-se sempre do UID mais antigo para o mais recente
+        uids = sorted((data[0] or b"").split(), key=int)
 
         state_path = output_dir / ".extraction_state"
         state = load_seen_state(state_path)
@@ -162,14 +185,29 @@ def extract_recent_emails(host, port, username, password, limit=10, timeout=60, 
         uidvalidity = (validity_data or [None])[0]
         uidvalidity = uidvalidity.decode("ascii") if isinstance(uidvalidity, bytes) else str(uidvalidity)
         previous = state.get(state_key, {})
-        if previous.get("uidvalidity") == uidvalidity:
+
+        if reprocess_all:
+            last_seen = 0
+        elif previous.get("uidvalidity") == uidvalidity:
             last_seen = int(previous.get("last_uid", 0))
         else:
+            # UIDVALIDITY mudou (ou primeira execucao): recomecar do que ja esta guardado em disco
             last_seen = last_saved_uid(output_dir, folder) if not previous else 0
+
         new_uids = [uid for uid in uids if int(uid) > last_seen]
-        print(f"Emails novos desde a ultima verificacao: {len(new_uids)}.", flush=True)
+
+        # >>> CORRECAO PRINCIPAL: extrair apenas os NOVOS, nao os ultimos N da caixa
+        selected = new_uids[:limit] if limit else new_uids
+
+        print(
+            f"Emails na pasta {folder}: {len(uids)}. "
+            f"Ultimo UID processado: {last_seen}. "
+            f"Novos: {len(new_uids)}. A extrair agora: {len(selected)}.",
+            flush=True,
+        )
 
         metadata = []
+        ultimo_processado = last_seen
 
         for uid in selected:
             uid_str = uid.decode("ascii")
@@ -200,18 +238,39 @@ def extract_recent_emails(host, port, username, password, limit=10, timeout=60, 
                     "from": email_payload["from"],
                     "to": email_payload["to"],
                     "date": email_payload["date"],
+                    "attachments": len(email_payload["attachments"]),
                 }
             )
 
+            # so avanca o marcador depois de o ficheiro estar escrito
+            ultimo_processado = max(ultimo_processado, int(uid_str))
             print(f"- Guardado: {file_path.name}")
 
+        # o resumo acumula em vez de ser substituido em cada execucao
         summary_path = output_dir / "summary.json"
-        summary_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8")
+        historico = []
+        if summary_path.exists():
+            try:
+                anterior = json.loads(summary_path.read_text(encoding="utf-8"))
+                if isinstance(anterior, list):
+                    historico = anterior
+            except (OSError, ValueError):
+                historico = []
 
-        state[state_key] = {"uidvalidity": uidvalidity, "last_uid": max((int(uid) for uid in uids), default=last_seen)}
+        indice = {(item.get("folder"), item.get("uid")): item for item in historico}
+        for item in metadata:
+            indice[(item["folder"], item["uid"])] = item
+        combinado = sorted(indice.values(), key=lambda item: (item.get("folder", ""), int(item.get("uid", 0))))
+        summary_path.write_text(json.dumps(combinado, ensure_ascii=False, indent=2), encoding="utf-8")
+
+        # guarda o ultimo UID REALMENTE processado (nao o maior da caixa)
+        state[state_key] = {"uidvalidity": uidvalidity, "last_uid": ultimo_processado}
         state_path.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
 
+        restantes = max(len(new_uids) - len(metadata), 0)
         print(f"\nExtracao concluida. {len(metadata)} emails guardados em {output_dir}")
+        if restantes:
+            print(f"Faltam {restantes} emails novos. Voltar a correr o script para continuar.")
         return metadata
 
     finally:
@@ -232,10 +291,16 @@ def main():
     parser.add_argument("--host", default=os.getenv("Email__ImapHost") or os.getenv("IMAP_HOST", "mail.globalbrico.pt"))
     parser.add_argument("--porta", type=int, default=os.getenv("Email__ImapPort") or os.getenv("IMAP_PORT", "993"))
     parser.add_argument("--utilizador", default=os.getenv("Email__Username") or os.getenv("EMAIL", "encomendas@globalbrico.pt"))
-    parser.add_argument("--limite", type=int, default=os.getenv("Email__MaxMessagesPerPoll", "10"))
+    parser.add_argument(
+        "--limite",
+        type=int,
+        default= 1000,
+        help="Maximo de emails NOVOS por execucao. 0 = todos os novos.",
+    )
     parser.add_argument("--pasta", default=os.getenv("IMAP_FOLDER", "INBOX"), help="Nome da pasta IMAP a extrair (por defeito: INBOX).")
     parser.add_argument("--timeout", type=int, default=os.getenv("Email__ConnectionTimeoutSeconds", "60"))
     parser.add_argument("--output-dir", default=str(Path(__file__).resolve().parent.parent / "data/extracted_emails"))
+    parser.add_argument("--todos", action="store_true", help="Ignora o estado guardado e volta a extrair a pasta desde o inicio.")
     args = parser.parse_args()
 
     if not 1 <= args.porta <= 65535:
@@ -264,6 +329,7 @@ def main():
             timeout=args.timeout,
             output_dir=args.output_dir,
             folder=args.pasta,
+            reprocess_all=args.todos,
         )
         return 0
 

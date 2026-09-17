@@ -10,8 +10,74 @@ python -m src.extraction --pasta INBOX --limite 100
 python -m src.classify_emails
 ```
 
+## Receber emails do Lovable por API
+
+A API recebe um email em JSON, guarda-o em `data/extracted_emails/` e responde com
+um objeto vazio. Não executa classificação.
+
+Configura um token secreto diferente da password da conta de email:
+
+```bash
+export EMAIL_INGEST_TOKEN='substituir-por-um-token-longo-e-aleatorio'
+export EMAIL_INGEST_OUTPUT_DIR='./data/extracted_emails'
+uvicorn src.email_api:app --host 0.0.0.0 --port 8000
+```
+
+No Lovable, envia cada novo email para `POST /v1/emails` com
+`Authorization: Bearer <token>` e `Content-Type: application/json`:
+
+```json
+{
+  "id": "identificador-unico-do-email",
+  "message_id": "<abc123@example.com>",
+  "received_at": "2026-09-16T09:45:00Z",
+  "subject": "Pedido de orçamento",
+  "from": "cliente@example.com",
+  "to": ["encomendas@globalbrico.pt"],
+  "text": "Bom dia, gostaria de solicitar...",
+  "html": "<p>Bom dia...</p>",
+  "attachments": [
+    {
+      "filename": "pedido.pdf",
+      "content_type": "application/pdf",
+      "size_bytes": 123456,
+      "url": "https://..."
+    }
+  ]
+}
+```
+
+O endpoint responde com HTTP `202` e `{}`. O mesmo `id` pode ser reenviado sem
+criar duplicados. `GET /health` permite verificar se o serviço está ativo.
+
 O classificador de produção carrega `src/models/xlm_roberta_large_xnli_finetuned/`. Para experimentar com os emails já extraídos, indica `--input-dir research/extracted_emails`. A extração nova guarda JSON em `data/extracted_emails/`.
 Cada execução da extração mostra quantos emails chegaram à pasta desde a última verificação. O ponto de comparação é guardado em `data/extracted_emails/.extraction_state`, por servidor, conta e pasta. `--limite` continua a controlar quantos emails são extraídos, independentemente da contagem de novos.
+
+## Gestão e Anotação Incremental de Novos Emails (Excel)
+
+Para classificar emails novos à medida que vão chegando (sem alterar a base histórica em `data/extracted_emails/`) e comparar com outra IA e com o Transformer:
+
+```bash
+# Execução padrão (lê data/incoming_emails/ e atualiza data/emails_classificacao.xlsx)
+python -m src.sync_excel
+
+# Cópia direta e automática de uma pasta externa + atualização do Excel
+python -m src.sync_excel --source-dir /caminho/para/pasta_externa
+
+# Sem executar o transformer automaticamente
+python -m src.sync_excel --no-transformer
+```
+
+### Como funciona:
+1. **Deteção Incremental**: Deteta apenas ficheiros `.json` novos e adiciona-os ao Excel (`data/emails_classificacao.xlsx`). Registos e anotações manuais já existentes são 100% preservados.
+2. **Folha `Revisão`**:
+   - `Label correta`: Lista suspensa (*dropdown*) com `Pedido de Informação`, `Pedido de Encomenda` e `SPAM` para anotação humana rápida e sem gralhas.
+   - `Label Outra IA`: Registada a partir do JSON (se já existir no payload) ou para preenchimento manual da IA externa a comparar.
+   - `Label Transformer` e `Score Transformer`: Previsão e probabilidade calculadas automaticamente pelo modelo fine-tuned de produção.
+   - `Concordância Outra IA` e `Concordância Transformer`: Fórmulas automáticas de concordância (`Concorda`, `Diverge` ou `Pendente`).
+3. **Compatibilidade com Fine-Tuning**: A folha `Revisão` é compatível com `src/finetuning.py` e `src/email_data.py`.
+
+
 
 ## Comparar abordagens
 

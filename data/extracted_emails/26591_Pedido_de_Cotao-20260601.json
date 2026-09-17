@@ -1,5 +1,20 @@
 {
   "uid": "26591",
+  "message_id": "<aea179a4652faf8590f1808f06d3f638@italfrom.com>",
+  "in_reply_to": "<CAC-5hdHtdk3-bsDRxk+XoFOfbcDm-zd6hU49-tRQyWTc=4Og9Q@mail.gmail.com>",
+  "references": [
+    "<GVXP189MB2054969C6F1AE2AB2B30104CAC9A2@GVXP189MB2054.EURP189.PROD.OUTLOOK.COM>",
+    "<CAN7Fat_E6V9zVUT=iWq4omdTHz8nmACbqPG_gPeWgXm-jhUG=Q@mail.gmail.com>",
+    "<CAC-5hdHq3biq=DOgACDqurR0ybTpVT8gK6wcgW1ozfG+cuApfw@mail.gmail.com>",
+    "<CAC-5hdHzzNeMAV0Za=15C1DQU_b-wETVserL4vcPJPb-Mmeyow@mail.gmail.com>",
+    "<CAC-5hdGaRvKtB25j5WO5k0ZMwWEFjSK8CV9Bf5S5aYyMJAF1eg@mail.gmail.com>",
+    "<CAC-5hdEzRKtd1dtBG5oaVLEDm7McDPcMh8PG9tRk3NxqVHq0CA@mail.gmail.com>",
+    "<CAC-5hdEco+iCAi2A3CfzcHiLLXzQd6Q-zQttM7dFERdacX4QFw@mail.gmail.com>",
+    "<CAC-5hdGCkw+JnCH0F0YT24sa5WUU6J4Ci=r0eZyK6nihhwnMaw@mail.gmail.com>",
+    "<CAC-5hdF+Fj5eoT-yoQ1tpE+z7yqhriUJkukNHJ01p7UciGyeMQ@mail.gmail.com>",
+    "<CAC-5hdH7gV7Jcvp+Et2DvNgiFquq-SDiyUHnDVWZ_kmiG3in+g@mail.gmail.com>",
+    "<CAC-5hdHtdk3-bsDRxk+XoFOfbcDm-zd6hU49-tRQyWTc=4Og9Q@mail.gmail.com>"
+  ],
   "subject": "Pedido de Cotação-20260601",
   "from": "Jorge Miguel <italfrombrands@italfrom.com>",
   "to": "undisclosed-recipients:;",
@@ -10,7 +25,8 @@
     {
       "filename": "Pedido de Cotação-20260601_Mapa de Quantidades_Lista Comercial_pdf.rar",
       "content_type": "application/x-rar-compressed",
-      "size_bytes": 2537
+      "size_bytes": 2537,
+      "content_base64": "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"
     }
   ],
   "folder": "INBOX"

@@ -7,3 +7,5 @@ openpyxl>=3.1
 pandas>=2.0
 scikit-learn>=1.5,<2
 requests>=2.31
+fastapi>=0.115,<1
+uvicorn[standard]>=0.34,<1
