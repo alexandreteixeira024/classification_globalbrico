@@ -3,7 +3,7 @@
 Execução típica:
     python -m src.sync_excel
     python -m src.sync_excel --source-dir /caminho/pasta/externa
-    python -m src.sync_excel --input-dir data/incoming_emails --excel data/emails_classificacao.xlsx
+    python -m src.sync _excel --input-dir data/incoming_emails --excel data/emails_classificacao.xlsx
 """
 
 import argparse
@@ -20,12 +20,12 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
 
-from .email_data import LABELS, email_text
+from email_data import LABELS, email_text
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_INPUT_DIR = ROOT / "data/incoming_emails"
+DEFAULT_INPUT_DIR = ROOT / "data/globalbrico_emails"
 DEFAULT_EXCEL_PATH = ROOT / "data/emails_classificacao.xlsx"
-DEFAULT_MODEL_DIR = ROOT / "src/models/xlm_roberta_large_xnli_finetuned"
+DEFAULT_MODEL_DIR = ROOT / "src/models/xlm_roberta_large_email_512"
 SPAM_IN_SUBJECT = re.compile(r"\bSPAM\b", re.IGNORECASE)
 
 COLUMNS = [
