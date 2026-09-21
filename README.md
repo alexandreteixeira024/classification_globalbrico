@@ -77,6 +77,43 @@ python -m src.sync_excel --no-transformer
    - `Concordância Outra IA` e `Concordância Transformer`: Fórmulas automáticas de concordância (`Concorda`, `Diverge` ou `Pendente`).
 3. **Compatibilidade com Fine-Tuning**: A folha `Revisão` é compatível com `src/finetuning.py` e `src/email_data.py`.
 
+## Fine-tuning diário com cross-validation
+
+Depois de adicionar os JSON a `data/globalbrico_emails/`, sincroniza o Excel, preenche
+`Label correta` nos novos registos e executa:
+
+```bash
+source .GB/bin/activate
+python -m src.sync_excel
+# Preencher agora as novas células "Label correta" no Excel.
+python -m src.finetuning
+```
+
+Cada execução faz 5-fold cross-validation agrupada por conversa. Em cada fold, cerca
+de 80% dos dados são usados para treino e 20% para teste; cada email é avaliado fora
+do treino exatamente uma vez. Os cinco modelos recomeçam sempre em
+`joeddav/xlm-roberta-large-xnli`. No fim, é treinado um sexto modelo com 100% dos
+dados, que fica disponível para produção.
+
+As conversas mantêm sempre o mesmo fold através de
+`data/finetuning_cv_folds.json`. Novas conversas são distribuídas pelos folds de
+forma equilibrada por classe. Isto evita colocar respostas da mesma conversa nos
+dois lados e reduz variação artificial entre execuções diárias.
+
+Cada execução cria `data/finetuning_results/<data-hora>/` com:
+
+- `metrics.json`: métricas out-of-fold globais, por classe, por fold, matriz de
+  confusão, parâmetros e dispersão entre folds;
+- `predictions.csv`: uma previsão out-of-fold para cada email;
+- `fold_metrics.csv`: métricas individuais dos cinco folds;
+- `folds.json`: UIDs atribuídos a cada fold.
+
+O ficheiro `data/finetuning_history.csv` acumula uma linha por execução e
+`data/finetuning_results/latest.json` aponta para o resultado mais recente. O
+histórico inclui ainda a variação emparelhada de accuracy e macro-F1, calculada
+apenas nos UIDs comuns à execução atual e à anterior; esta é a comparação mais
+adequada quando a base de dados cresce entre execuções.
+
 
 
 ## Comparar abordagens

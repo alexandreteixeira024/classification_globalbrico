@@ -1,0 +1,2 @@
+﻿run_id,created_at_utc,method,dataset_fingerprint,n_total,n_groups,accuracy,f1_macro,precision_macro,recall_macro,fold_accuracy_std,fold_f1_macro_std,paired_common_uids,paired_delta_accuracy,paired_delta_f1_macro,delta_accuracy,delta_f1_macro
+20260918T112853Z,2026-09-18T12:47:19.965527+00:00,5-fold-grouped-cross-validation,2a4c952af8c5c8b385d584a2cf033fa341d8e60e581598bf978838b482d57561,28,26,0.607143,0.466667,0.41886,0.527778,0.130361,0.157335,0,,,,

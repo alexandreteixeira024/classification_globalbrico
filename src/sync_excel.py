@@ -7,6 +7,7 @@ Execução típica:
 """
 
 import argparse
+import html as html_lib
 import json
 import re
 import shutil
@@ -20,12 +21,12 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
 
-from email_data import LABELS, email_text
+from .email_data import LABELS, email_text
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_INPUT_DIR = ROOT / "data/globalbrico_emails"
 DEFAULT_EXCEL_PATH = ROOT / "data/emails_classificacao.xlsx"
-DEFAULT_MODEL_DIR = ROOT / "src/models/xlm_roberta_large_email_512"
+DEFAULT_MODEL_DIR = ROOT / "src/models/xlm_roberta_large_xnli_finetuned"
 SPAM_IN_SUBJECT = re.compile(r"\bSPAM\b", re.IGNORECASE)
 
 COLUMNS = [
@@ -33,7 +34,7 @@ COLUMNS = [
     ("Data", 20),
     ("Remetente", 35),
     ("Assunto", 45),
-    ("Texto (Resumo)", 55),
+    ("Texto completo", 80),
     ("Label correta", 22),
     ("Label Outra IA", 22),
     ("Label Transformer", 22),
@@ -74,11 +75,15 @@ def normalize_email(data: Dict[str, Any], filepath: Optional[Path] = None) -> Di
 
     text = data.get("text") or data.get("body") or data.get("html") or ""
     if isinstance(text, str):
+        if re.search(r"<[^>]+>", text):
+            text = re.sub(r"<br\s*/?>|</p>|</div>|</li>|</tr>", "\n", text, flags=re.IGNORECASE)
+            text = re.sub(r"<[^>]+>", " ", text)
+            text = html_lib.unescape(text)
         clean_text = " ".join(text.split())
     else:
         clean_text = str(text)
 
-    summary_text = clean_text[:300] + ("..." if len(clean_text) > 300 else "")
+    full_text = clean_text[:32767]
 
     # Deteta label da outra IA se já vier registada no JSON
     outra_ia_label = (
@@ -113,7 +118,7 @@ def normalize_email(data: Dict[str, Any], filepath: Optional[Path] = None) -> Di
         "date": date,
         "from": sender,
         "subject": subject,
-        "summary": summary_text,
+        "summary": full_text,
         "full_text": text,
         "outra_ia_label": outra_ia_label,
         "attachments_desc": anexos_desc,

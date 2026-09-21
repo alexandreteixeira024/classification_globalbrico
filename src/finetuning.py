@@ -1,22 +1,32 @@
-"""Fine-tuning de um transformer a partir do modelo base com divisão estratificada 80/20.
+"""Fine-tuning diário com 5-fold cross-validation e histórico de resultados.
 
 Executar da raiz do projeto:
     python -m src.finetuning
-    python -m src.finetuning --epochs 10 --test-size 0.20 --seed 42
 """
 
 import argparse
 import csv
+import gc
+import hashlib
 import json
-import random
 import re
-from collections import defaultdict
+import tempfile
+import unicodedata
+from collections import Counter, defaultdict
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from statistics import mean, pstdev
+from typing import Dict, List, Tuple
 
 import numpy as np
 import openpyxl
-from sklearn.metrics import accuracy_score, classification_report, precision_recall_fscore_support
+import torch
+from sklearn.metrics import (
+    accuracy_score,
+    classification_report,
+    confusion_matrix,
+    precision_recall_fscore_support,
+)
 from torch.utils.data import Dataset
 from transformers import (
     AutoModelForSequenceClassification,
@@ -24,6 +34,7 @@ from transformers import (
     DataCollatorWithPadding,
     Trainer,
     TrainingArguments,
+    set_seed,
 )
 
 from .email_data import LABELS, email_text
@@ -31,15 +42,23 @@ from .email_data import LABELS, email_text
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_BASE_MODEL = "joeddav/xlm-roberta-large-xnli"
 DEFAULT_EXCEL = ROOT / "data/emails_classificacao.xlsx"
+DEFAULT_EMAILS_DIR = ROOT / "data/globalbrico_emails"
 DEFAULT_OUTPUT = ROOT / "src/models/xlm_roberta_large_xnli_finetuned"
+DEFAULT_RESULTS_DIR = ROOT / "data/finetuning_results"
+DEFAULT_HISTORY = ROOT / "data/finetuning_history.csv"
+DEFAULT_FOLDS_MANIFEST = ROOT / "data/finetuning_cv_folds.json"
+DEFAULT_FOLDS = 5
+
+# uid, texto, label, grupo de conversa
+Example = Tuple[str, str, str, str]
 
 
 class EmailDataset(Dataset):
-    def __init__(self, examples: List[Tuple[str, str, str]], tokenizer, max_length: int):
+    def __init__(self, examples: List[Example], tokenizer, max_length: int):
         self.items = []
         self.uids = []
         self.labels = []
-        for uid, text, label in examples:
+        for uid, text, label, _group in examples:
             item = tokenizer(text, truncation=True, max_length=max_length)
             item["labels"] = LABELS.index(label)
             self.items.append(item)
@@ -53,8 +72,12 @@ class EmailDataset(Dataset):
         return self.items[index]
 
 
+def save_json(path: Path, value: Dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
 def find_emails_by_uid(search_dirs: List[Path]) -> Dict[str, Dict]:
-    """Procura emails em formato JSON recursivamente nas pastas fornecidas e indexa por UID."""
     emails = {}
     for folder in search_dirs:
         if not folder.is_dir():
@@ -64,233 +87,506 @@ def find_emails_by_uid(search_dirs: List[Path]) -> Dict[str, Dict]:
                 continue
             try:
                 data = json.loads(path.read_text(encoding="utf-8"))
-                uid = str(data.get("uid") or data.get("id") or path.stem).removesuffix(".0").strip()
-                if uid and uid not in emails:
-                    emails[uid] = data
-            except Exception:
+            except (OSError, ValueError) as error:
+                print(f"[Aviso] JSON ignorado ({path.name}): {error}")
                 continue
+            uid = str(data.get("uid") or data.get("id") or path.stem).removesuffix(".0").strip()
+            if not uid:
+                print(f"[Aviso] JSON sem UID ignorado: {path}")
+                continue
+            if uid in emails and emails[uid] != data:
+                raise ValueError(f"Conteúdo contraditório para o UID duplicado {uid}.")
+            emails[uid] = data
     return emails
 
 
-def load_examples(excel_path: Path, email_dirs: List[Path]) -> List[Tuple[str, str, str]]:
-    """Lê as labels humanas na folha 'Revisão' do Excel e carrega o texto dos emails."""
+def normalize_subject(subject: str) -> str:
+    subject = re.sub(
+        r"^\s*(?:\*+SPAM\*+|\[SPAM\]|SPAM\b)[\s:_-]*", "", subject or "", flags=re.I
+    )
+    while True:
+        cleaned = re.sub(r"^\s*(?:re|fw|fwd|enc)\s*:\s*", "", subject, flags=re.I)
+        if cleaned == subject:
+            break
+        subject = cleaned
+    subject = unicodedata.normalize("NFKD", subject).encode("ascii", "ignore").decode("ascii")
+    return re.sub(r"[^a-z0-9]+", " ", subject.casefold()).strip()
+
+
+def conversation_group(data: Dict, text: str) -> str:
+    subject_key = normalize_subject(str(data.get("subject") or ""))
+    if subject_key:
+        return f"subject:{subject_key}"
+    normalized_text = re.sub(r"\s+", " ", text).strip().casefold()
+    return "body:" + hashlib.sha256(normalized_text.encode("utf-8")).hexdigest()
+
+
+def load_examples(excel_path: Path, email_dirs: List[Path]) -> List[Example]:
     if not excel_path.exists():
         raise FileNotFoundError(f"Ficheiro Excel não encontrado: {excel_path}")
 
-    wb = openpyxl.load_workbook(excel_path, read_only=True, data_only=True)
-    if "Revisão" not in wb.sheetnames:
-        raise ValueError("A folha 'Revisão' não foi encontrada no Excel.")
-
-    sheet = wb["Revisão"]
-    rows = sheet.iter_rows(values_only=True)
-    header = next((row for row in rows if "UID" in row and "Label correta" in row), None)
-    if header is None:
-        raise ValueError("Não encontrei as colunas 'UID' e 'Label correta' no Excel.")
-
-    uid_col = header.index("UID")
-    label_col = header.index("Label correta")
-
-    human_labels = {}
-    for row in rows:
-        uid = str(row[uid_col] or "").removesuffix(".0").strip()
-        label = str(row[label_col] or "").strip()
-        if not uid or not label:
-            continue
-        if label not in LABELS:
-            print(f"[Aviso] Label ignorada para UID {uid} por não pertencer às classes oficiais: '{label}'")
-            continue
-        human_labels[uid] = label
+    workbook = openpyxl.load_workbook(excel_path, read_only=True, data_only=True)
+    try:
+        if "Revisão" not in workbook.sheetnames:
+            raise ValueError("A folha 'Revisão' não foi encontrada no Excel.")
+        rows = workbook["Revisão"].iter_rows(values_only=True)
+        header = next((row for row in rows if "UID" in row and "Label correta" in row), None)
+        if header is None:
+            raise ValueError("Não encontrei as colunas 'UID' e 'Label correta' no Excel.")
+        uid_col = header.index("UID")
+        label_col = header.index("Label correta")
+        human_labels = {}
+        for row in rows:
+            uid = str(row[uid_col] or "").removesuffix(".0").strip()
+            label = str(row[label_col] or "").strip()
+            if not uid or not label:
+                continue
+            if label not in LABELS:
+                print(f"[Aviso] Label inválida ignorada para {uid}: {label!r}")
+                continue
+            if uid in human_labels:
+                raise ValueError(f"UID repetido no Excel: {uid}")
+            human_labels[uid] = label
+    finally:
+        workbook.close()
 
     if not human_labels:
-        raise ValueError("O Excel não contém nenhuma label humana válida preenchida na coluna 'Label correta'.")
-
-    emails_map = find_emails_by_uid(email_dirs)
-    missing = human_labels.keys() - emails_map.keys()
+        raise ValueError("O Excel não contém labels humanas válidas.")
+    emails = find_emails_by_uid(email_dirs)
+    missing = sorted(set(human_labels) - set(emails))
     if missing:
-        raise ValueError(f"Faltam ficheiros JSON correspondentes aos seguintes UIDs: {sorted(missing)}")
+        raise ValueError(f"Faltam JSON para os UIDs: {missing}")
 
     examples = []
     for uid, label in human_labels.items():
-        data = emails_map[uid]
-        text = email_text(data)
-        examples.append((uid, text, label))
-
+        text = email_text(emails[uid])
+        examples.append((uid, text, label, conversation_group(emails[uid], text)))
     return examples
 
 
-def stratified_split(
-    examples: List[Tuple[str, str, str]], test_size: float = 0.20, seed: int = 42
-) -> Tuple[List[Tuple[str, str, str]], List[Tuple[str, str, str]]]:
-    """Divide a amostra em conjuntos de treino e teste respeitando a proporção de cada classe."""
-    rng = random.Random(seed)
-    by_class = defaultdict(list)
-    for ex in examples:
-        by_class[ex[2]].append(ex)
-
-    train, test = [], []
-    for label, items in sorted(by_class.items()):
-        rng.shuffle(items)
-        n = len(items)
-        if n == 1:
-            # Classes com apenas 1 exemplo têm de ficar no treino para o modelo aprender
-            train.extend(items)
-            print(f"[Aviso] A classe '{label}' tem apenas 1 exemplo e será colocada no conjunto de treino.")
-        else:
-            n_test = int(round(n * test_size))
-            if n_test == 0 and test_size > 0:
-                n_test = 1
-            elif n_test >= n:
-                n_test = n - 1
-
-            test.extend(items[:n_test])
-            train.extend(items[n_test:])
-
-    rng.shuffle(train)
-    rng.shuffle(test)
-    return train, test
+def validate_groups(examples: List[Example], folds: int) -> Dict[str, str]:
+    group_labels = defaultdict(set)
+    for _uid, _text, label, group in examples:
+        group_labels[group].add(label)
+    conflicts = {group: sorted(labels) for group, labels in group_labels.items() if len(labels) != 1}
+    if conflicts:
+        raise ValueError(f"Existem conversas com labels contraditórias: {conflicts}")
+    label_by_group = {group: next(iter(labels)) for group, labels in group_labels.items()}
+    group_counts = Counter(label_by_group.values())
+    insufficient = {label: group_counts[label] for label in LABELS if group_counts[label] < folds}
+    if insufficient:
+        raise ValueError(
+            f"{folds}-fold requer pelo menos {folds} conversas independentes por classe. "
+            f"Contagens insuficientes: {insufficient}"
+        )
+    return label_by_group
 
 
-def compute_metrics(eval_pred):
-    logits, labels = eval_pred
-    preds = np.argmax(logits, axis=-1)
-    acc = accuracy_score(labels, preds)
-    precision, recall, f1, _ = precision_recall_fscore_support(labels, preds, average="macro", zero_division=0)
+def assign_stable_folds(
+    examples: List[Example], manifest_path: Path, folds: int, seed: int
+) -> Tuple[List[List[Example]], Dict]:
+    """Mantém grupos antigos no mesmo fold e equilibra novos grupos por classe."""
+    label_by_group = validate_groups(examples, folds)
+    if manifest_path.exists():
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if manifest.get("folds") != folds:
+            raise ValueError(
+                f"O manifesto existente usa {manifest.get('folds')} folds, não {folds}. "
+                "Usa outro --fold-manifest para iniciar uma nova série."
+            )
+        assignments = {str(group): int(fold) for group, fold in manifest["assignments"].items()}
+        stored_labels = manifest.get("group_labels", {})
+        changed = {
+            group: (stored_labels[group], label)
+            for group, label in label_by_group.items()
+            if group in stored_labels and stored_labels[group] != label
+        }
+        if changed:
+            raise ValueError(f"Labels de conversas já atribuídas mudaram: {changed}")
+    else:
+        assignments = {}
+        manifest = {
+            "version": 1,
+            "created_at_utc": datetime.now(timezone.utc).isoformat(),
+            "folds": folds,
+            "seed": seed,
+            "assignments": assignments,
+            "group_labels": {},
+        }
+
+    counts = {label: [0] * folds for label in LABELS}
+    for group, fold in assignments.items():
+        label = manifest.get("group_labels", {}).get(group)
+        if label in counts and 0 <= fold < folds:
+            counts[label][fold] += 1
+
+    new_groups = [group for group in label_by_group if group not in assignments]
+    new_groups.sort(key=lambda group: hashlib.sha256(f"{seed}:{group}".encode()).hexdigest())
+    for group in new_groups:
+        label = label_by_group[group]
+        minimum = min(counts[label])
+        candidates = [fold for fold, count in enumerate(counts[label]) if count == minimum]
+        tie_break = int(hashlib.sha256(f"{seed}:{label}:{group}".encode()).hexdigest(), 16)
+        fold = candidates[tie_break % len(candidates)]
+        assignments[group] = fold
+        counts[label][fold] += 1
+
+    manifest["assignments"] = dict(sorted(assignments.items()))
+    manifest["group_labels"] = dict(sorted({**manifest.get("group_labels", {}), **label_by_group}.items()))
+    manifest["updated_at_utc"] = datetime.now(timezone.utc).isoformat()
+    save_json(manifest_path, manifest)
+
+    fold_examples = [[] for _ in range(folds)]
+    for example in examples:
+        fold_examples[assignments[example[3]]].append(example)
+    if any(not fold for fold in fold_examples):
+        raise ValueError("Foi criado um fold vazio; são necessários mais grupos independentes.")
+    return fold_examples, manifest
+
+
+def dataset_fingerprint(examples: List[Example]) -> str:
+    payload = [
+        {"uid": uid, "label": label, "text_sha256": hashlib.sha256(text.encode()).hexdigest()}
+        for uid, text, label, _group in sorted(examples)
+    ]
+    raw = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(raw.encode()).hexdigest()
+
+
+def make_model(base_model: str):
+    return AutoModelForSequenceClassification.from_pretrained(
+        base_model,
+        num_labels=len(LABELS),
+        id2label=dict(enumerate(LABELS)),
+        label2id={label: index for index, label in enumerate(LABELS)},
+    )
+
+
+def make_training_args(output_dir: str, args, seed: int) -> TrainingArguments:
+    return TrainingArguments(
+        output_dir=output_dir,
+        use_cpu = True, 
+        num_train_epochs=args.epochs,
+        per_device_train_batch_size=args.batch_size,
+        per_device_eval_batch_size=args.batch_size,
+        learning_rate=args.learning_rate,
+        eval_strategy="no",
+        save_strategy="no",
+        report_to="none",
+        seed=seed,
+        data_seed=seed,
+    )
+
+
+def clear_device_cache() -> None:
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+    elif torch.backends.mps.is_available():
+        torch.mps.empty_cache()
+
+
+def scores(truth: List[str], predicted: List[str]) -> Dict:
+    precision, recall, f1, support = precision_recall_fscore_support(
+        truth, predicted, labels=LABELS, zero_division=0
+    )
+    macro_precision, macro_recall, macro_f1, _ = precision_recall_fscore_support(
+        truth, predicted, labels=LABELS, average="macro", zero_division=0
+    )
     return {
-        "accuracy": acc,
-        "f1_macro": f1,
-        "recall_macro": recall,
-        "precision_macro": precision,
+        "accuracy": float(accuracy_score(truth, predicted)),
+        "precision_macro": float(macro_precision),
+        "recall_macro": float(macro_recall),
+        "f1_macro": float(macro_f1),
+        "per_class": {
+            label: {
+                "precision": float(precision[index]),
+                "recall": float(recall[index]),
+                "f1": float(f1[index]),
+                "support": int(support[index]),
+            }
+            for index, label in enumerate(LABELS)
+        },
+        "confusion_matrix": {
+            "labels": list(LABELS),
+            "values": confusion_matrix(truth, predicted, labels=LABELS).tolist(),
+        },
+    }
+
+
+def write_csv(path: Path, rows: List[Dict]) -> None:
+    if not rows:
+        return
+    with path.open("w", encoding="utf-8-sig", newline="") as output:
+        writer = csv.DictWriter(output, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def append_history(path: Path, row: Dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    write_header = not path.exists()
+    with path.open("a", encoding="utf-8-sig", newline="") as output:
+        writer = csv.DictWriter(output, fieldnames=list(row))
+        if write_header:
+            writer.writeheader()
+        writer.writerow(row)
+
+
+def paired_with_previous(results_dir: Path, current_rows: List[Dict]) -> Dict:
+    """Compara duas execuções apenas nos UIDs presentes em ambas."""
+    latest = results_dir / "latest.json"
+    empty = {
+        "n_common": 0,
+        "previous_run": None,
+        "previous_accuracy": None,
+        "current_accuracy": None,
+        "delta_accuracy": None,
+        "previous_f1_macro": None,
+        "current_f1_macro": None,
+        "delta_f1_macro": None,
+    }
+    if not latest.exists():
+        return empty
+    pointer = json.loads(latest.read_text(encoding="utf-8"))
+    previous_path = Path(pointer["run_dir"]) / "predictions.csv"
+    if not previous_path.exists():
+        return empty
+    with previous_path.open(encoding="utf-8-sig", newline="") as source:
+        previous = {row["uid"]: row for row in csv.DictReader(source)}
+    current = {row["uid"]: row for row in current_rows}
+    common = sorted(set(previous) & set(current))
+    if not common:
+        return empty
+    truth = [current[uid]["label_real"] for uid in common]
+    previous_predicted = [previous[uid]["label_prevista"] for uid in common]
+    current_predicted = [current[uid]["label_prevista"] for uid in common]
+    previous_scores = scores(truth, previous_predicted)
+    current_scores = scores(truth, current_predicted)
+    return {
+        "n_common": len(common),
+        "previous_run": pointer.get("run_id"),
+        "previous_accuracy": previous_scores["accuracy"],
+        "current_accuracy": current_scores["accuracy"],
+        "delta_accuracy": current_scores["accuracy"] - previous_scores["accuracy"],
+        "previous_f1_macro": previous_scores["f1_macro"],
+        "current_f1_macro": current_scores["f1_macro"],
+        "delta_f1_macro": current_scores["f1_macro"] - previous_scores["f1_macro"],
     }
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--base-model",
-        default=DEFAULT_BASE_MODEL,
-        help=f"Modelo pré-treinado base de onde sempre recomeça o fine-tuning (defeito: {DEFAULT_BASE_MODEL}).",
-    )
-    parser.add_argument(
-        "--excel",
-        type=Path,
-        default=DEFAULT_EXCEL,
-        help=f"Caminho para o Excel com as anotações (defeito: {DEFAULT_EXCEL.relative_to(ROOT)}).",
-    )
-    parser.add_argument(
-        "--emails-dir",
-        type=Path,
-        action="append",
-        default=None,
-        help="Diretórios contendo os ficheiros JSON (pode ser repetido). Por defeito procura em data/incoming_emails e data/extracted_emails.",
-    )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        default=DEFAULT_OUTPUT,
-        help=f"Diretório onde gravar o checkpoint fine-tuned (defeito: {DEFAULT_OUTPUT.relative_to(ROOT)}).",
-    )
-    parser.add_argument("--epochs", type=float, default=10, help="Número de épocas de treino (defeito: 10).")
-    parser.add_argument("--batch-size", type=int, default=2, help="Batch size por dispositivo (defeito: 2).")
-    parser.add_argument("--learning-rate", type=float, default=2e-5, help="Taxa de aprendizagem (defeito: 2e-5).")
-    parser.add_argument("--max-length", type=int, default=512, help="Tamanho máximo de sequência (defeito: 512).")
-    parser.add_argument("--test-size", type=float, default=0.20, help="Fração para conjunto de teste (defeito: 0.20 = 20%).")
-    parser.add_argument("--seed", type=int, default=42, help="Semente aleatória para reprodutibilidade (defeito: 42).")
-
+    parser.add_argument("--base-model", default=DEFAULT_BASE_MODEL)
+    parser.add_argument("--excel", type=Path, default=DEFAULT_EXCEL)
+    parser.add_argument("--emails-dir", type=Path, action="append", default=None)
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--results-dir", type=Path, default=DEFAULT_RESULTS_DIR)
+    parser.add_argument("--history", type=Path, default=DEFAULT_HISTORY)
+    parser.add_argument("--fold-manifest", type=Path, default=DEFAULT_FOLDS_MANIFEST)
+    parser.add_argument("--folds", type=int, default=DEFAULT_FOLDS)
+    parser.add_argument("--epochs", type=float, default=5)
+    parser.add_argument("--batch-size", type=int, default=2)
+    parser.add_argument("--learning-rate", type=float, default=2e-5)
+    parser.add_argument("--max-length", type=int, default=512)
+    parser.add_argument("--seed", type=int, default=42)
     args = parser.parse_args()
 
-    email_search_dirs = args.emails_dir or [
-        ROOT / "data/incoming_emails",
-        ROOT / "data/extracted_emails",
-    ]
+    if args.folds < 2:
+        parser.error("--folds tem de ser pelo menos 2.")
+    if args.epochs <= 0 or args.batch_size <= 0 or args.max_length < 32:
+        parser.error("Épocas e batch size têm de ser positivos; max-length tem de ser pelo menos 32.")
 
-    print(f"A carregar emails anotados de {args.excel}...")
-    examples = load_examples(args.excel, email_search_dirs)
-    print(f"Total de emails rotulados: {len(examples)}")
+    examples = load_examples(args.excel, args.emails_dir or [DEFAULT_EMAILS_DIR])
+    print(f"Emails rotulados: {len(examples)}")
     for label in LABELS:
-        count = sum(1 for _, _, y in examples if y == label)
-        print(f"  - {label}: {count}")
+        print(f"  {label}: {sum(item[2] == label for item in examples)}")
 
-    # Divisão 80/20 estratificada
-    train_examples, test_examples = stratified_split(examples, test_size=args.test_size, seed=args.seed)
-    print(f"\nDivisão dos dados (seed={args.seed}):")
-    print(f"  Treino ({len(train_examples)} emails, {len(train_examples)/len(examples)*100:.1f}%):")
-    for label in LABELS:
-        c = sum(1 for _, _, y in train_examples if y == label)
-        print(f"    * {label}: {c}")
-    print(f"  Teste  ({len(test_examples)} emails, {len(test_examples)/len(examples)*100:.1f}%):")
-    for label in LABELS:
-        c = sum(1 for _, _, y in test_examples if y == label)
-        print(f"    * {label}: {c}")
+    folds, _fold_manifest = assign_stable_folds(examples, args.fold_manifest, args.folds, args.seed)
+    for index, fold in enumerate(folds, 1):
+        print(f"Fold {index}: teste={len(fold)}, treino={len(examples) - len(fold)}")
 
-    # Sempre recomeçar a partir do modelo base
-    print(f"\nA carregar modelo base: {args.base_model} (sem data leakage)...")
+    run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    run_dir = args.results_dir / run_id
+    suffix = 1
+    while run_dir.exists():
+        run_dir = args.results_dir / f"{run_id}-{suffix}"
+        suffix += 1
+    run_dir.mkdir(parents=True)
+
     tokenizer = AutoTokenizer.from_pretrained(args.base_model)
-    model = AutoModelForSequenceClassification.from_pretrained(
-        args.base_model,
-        num_labels=len(LABELS),
-        id2label=dict(enumerate(LABELS)),
-        label2id={label: i for i, label in enumerate(LABELS)},
-    )
+    collator = DataCollatorWithPadding(tokenizer)
+    predictions = []
+    fold_metrics = []
+    fold_logs = {}
 
-    train_dataset = EmailDataset(train_examples, tokenizer, args.max_length)
-    test_dataset = EmailDataset(test_examples, tokenizer, args.max_length) if test_examples else None
+    for fold_index, test_examples in enumerate(folds):
+        test_uids = {item[0] for item in test_examples}
+        train_examples = [item for item in examples if item[0] not in test_uids]
+        fold_seed = args.seed + fold_index
+        set_seed(fold_seed)
+        print(f"\n=== Fold {fold_index + 1}/{args.folds}: treino={len(train_examples)}, teste={len(test_examples)} ===")
 
-    # Configuração dos argumentos de treino
-    training_args = TrainingArguments(
-        output_dir=str(args.output),
-        num_train_epochs=args.epochs,
-        per_device_train_batch_size=args.batch_size,
-        learning_rate=args.learning_rate,
-        eval_strategy="epoch" if test_dataset else "no",
-        save_strategy="no",
-        report_to="none",
-        seed=args.seed,
-    )
+        train_dataset = EmailDataset(train_examples, tokenizer, args.max_length)
+        test_dataset = EmailDataset(test_examples, tokenizer, args.max_length)
+        with tempfile.TemporaryDirectory(prefix=f"globalbrico-fold-{fold_index + 1}-") as temporary:
+            model = make_model(args.base_model)
+            trainer = Trainer(
+                model=model,
+                args=make_training_args(temporary, args, fold_seed),
+                train_dataset=train_dataset,
+                data_collator=collator,
+                processing_class=tokenizer,
+            )
+            trainer.train()
+            output = trainer.predict(test_dataset)
+            logits = output.predictions
+            predicted_indices = np.argmax(logits, axis=-1)
+            predicted_labels = [LABELS[index] for index in predicted_indices]
+            fold_score = scores(test_dataset.labels, predicted_labels)
+            fold_metrics.append({
+                "fold": fold_index + 1,
+                "n_train": len(train_examples),
+                "n_test": len(test_examples),
+                "accuracy": fold_score["accuracy"],
+                "precision_macro": fold_score["precision_macro"],
+                "recall_macro": fold_score["recall_macro"],
+                "f1_macro": fold_score["f1_macro"],
+            })
+            fold_logs[str(fold_index + 1)] = trainer.state.log_history
+            for uid, label, predicted_index, logit in zip(
+                test_dataset.uids, test_dataset.labels, predicted_indices, logits
+            ):
+                probabilities = np.exp(logit - np.max(logit))
+                probabilities = probabilities / probabilities.sum()
+                predictions.append({
+                    "uid": uid,
+                    "fold": fold_index + 1,
+                    "label_real": label,
+                    "label_prevista": LABELS[predicted_index],
+                    "correto": label == LABELS[predicted_index],
+                    "score": round(float(probabilities[predicted_index]), 6),
+                })
+            del output, logits, trainer, model, train_dataset, test_dataset
+            clear_device_cache()
 
-    trainer = Trainer(
-        model=model,
-        args=training_args,
-        train_dataset=train_dataset,
-        eval_dataset=test_dataset,
-        compute_metrics=compute_metrics if test_dataset else None,
-        data_collator=DataCollatorWithPadding(tokenizer),
+    if len(predictions) != len(examples) or len({row["uid"] for row in predictions}) != len(examples):
+        raise RuntimeError("As previsões out-of-fold não cobrem cada email exatamente uma vez.")
+
+    predictions.sort(key=lambda row: row["uid"])
+    truth = [row["label_real"] for row in predictions]
+    predicted = [row["label_prevista"] for row in predictions]
+    aggregate = scores(truth, predicted)
+    paired = paired_with_previous(args.results_dir, predictions)
+    fold_summary = {
+        metric: {
+            "mean": mean(row[metric] for row in fold_metrics),
+            "std": pstdev(row[metric] for row in fold_metrics),
+        }
+        for metric in ("accuracy", "precision_macro", "recall_macro", "f1_macro")
+    }
+
+    write_csv(run_dir / "predictions.csv", predictions)
+    write_csv(run_dir / "fold_metrics.csv", fold_metrics)
+    save_json(run_dir / "folds.json", {
+        "manifest": str(args.fold_manifest),
+        "folds": {
+            str(index + 1): sorted(item[0] for item in fold)
+            for index, fold in enumerate(folds)
+        },
+    })
+
+    print("\n=== Treino final de produção com 100% dos dados ===")
+    set_seed(args.seed)
+    full_dataset = EmailDataset(examples, tokenizer, args.max_length)
+    final_model = make_model(args.base_model)
+    final_trainer = Trainer(
+        model=final_model,
+        args=make_training_args(str(args.output), args, args.seed),
+        train_dataset=full_dataset,
+        data_collator=collator,
         processing_class=tokenizer,
     )
-
-    print("\nA iniciar fine-tuning...")
-    trainer.train()
-
+    final_trainer.train()
     args.output.mkdir(parents=True, exist_ok=True)
-    trainer.save_model(str(args.output))
+    final_trainer.save_model(str(args.output))
     tokenizer.save_pretrained(args.output)
-    print(f"Modelo guardado com sucesso em: {args.output}")
 
-    # Avaliação final detalhada no conjunto de teste (20%)
-    if test_dataset:
-        print("\nA avaliar no conjunto de teste (20%)...")
-        eval_metrics = trainer.evaluate()
-        print(f"Resultados de Validação: Loss={eval_metrics.get('eval_loss', 0):.4f}, "
-              f"Accuracy={eval_metrics.get('eval_accuracy', 0):.4f}, "
-              f"F1 Macro={eval_metrics.get('eval_f1_macro', 0):.4f}")
+    previous = None
+    if args.history.exists():
+        with args.history.open(encoding="utf-8-sig", newline="") as source:
+            rows = list(csv.DictReader(source))
+        previous = rows[-1] if rows else None
 
-        # Guardar predições de teste para auditoria
-        preds_output = trainer.predict(test_dataset)
-        logits = preds_output.predictions
-        pred_indices = np.argmax(logits, axis=-1)
+    metrics = {
+        "run_id": run_dir.name,
+        "created_at_utc": datetime.now(timezone.utc).isoformat(),
+        "method": f"{args.folds}-fold-grouped-cross-validation",
+        "dataset_fingerprint": dataset_fingerprint(examples),
+        "base_model": args.base_model,
+        "output_model": str(args.output),
+        "n_total": len(examples),
+        "n_groups": len({item[3] for item in examples}),
+        "folds": args.folds,
+        "epochs": args.epochs,
+        "batch_size": args.batch_size,
+        "learning_rate": args.learning_rate,
+        "max_length": args.max_length,
+        "seed": args.seed,
+        **aggregate,
+        "fold_metrics": fold_metrics,
+        "fold_summary": fold_summary,
+        "paired_with_previous_on_common_uids": paired,
+        "delta_accuracy_previous_run": (
+            aggregate["accuracy"] - float(previous["accuracy"]) if previous else None
+        ),
+        "delta_f1_macro_previous_run": (
+            aggregate["f1_macro"] - float(previous["f1_macro"]) if previous else None
+        ),
+        "fold_training_logs": fold_logs,
+        "final_training_log": final_trainer.state.log_history,
+    }
+    save_json(run_dir / "metrics.json", metrics)
 
-        test_results_path = args.output.parent / "test_predictions.csv"
-        with test_results_path.open("w", encoding="utf-8", newline="") as f:
-            writer = csv.writer(f)
-            writer.writerow(["UID", "Label_Real", "Label_Prevista", "Score"])
-            for uid, true_label, pred_idx, logit in zip(test_dataset.uids, test_dataset.labels, pred_indices, logits):
-                exp_logits = np.exp(logit - np.max(logit))
-                probs = exp_logits / exp_logits.sum()
-                score = round(float(probs[pred_idx]), 4)
-                writer.writerow([uid, true_label, LABELS[pred_idx], score])
+    history_row = {
+        "run_id": run_dir.name,
+        "created_at_utc": metrics["created_at_utc"],
+        "method": metrics["method"],
+        "dataset_fingerprint": metrics["dataset_fingerprint"],
+        "n_total": metrics["n_total"],
+        "n_groups": metrics["n_groups"],
+        "accuracy": round(aggregate["accuracy"], 6),
+        "f1_macro": round(aggregate["f1_macro"], 6),
+        "precision_macro": round(aggregate["precision_macro"], 6),
+        "recall_macro": round(aggregate["recall_macro"], 6),
+        "fold_accuracy_std": round(fold_summary["accuracy"]["std"], 6),
+        "fold_f1_macro_std": round(fold_summary["f1_macro"]["std"], 6),
+        "paired_common_uids": paired["n_common"],
+        "paired_delta_accuracy": (
+            "" if paired["delta_accuracy"] is None else round(paired["delta_accuracy"], 6)
+        ),
+        "paired_delta_f1_macro": (
+            "" if paired["delta_f1_macro"] is None else round(paired["delta_f1_macro"], 6)
+        ),
+        "delta_accuracy": "" if previous is None else round(metrics["delta_accuracy_previous_run"], 6),
+        "delta_f1_macro": "" if previous is None else round(metrics["delta_f1_macro_previous_run"], 6),
+    }
+    append_history(args.history, history_row)
+    save_json(args.results_dir / "latest.json", {
+        "run_id": run_dir.name,
+        "run_dir": str(run_dir),
+        "metrics": str(run_dir / "metrics.json"),
+    })
 
-        print(f"Predições detalhadas do conjunto de teste guardadas em: {test_results_path}")
-        print("\n=== Relatório de Classificação (Conjunto de Teste) ===")
-        print(classification_report(test_dataset.labels, [LABELS[p] for p in pred_indices], labels=LABELS, zero_division=0))
+    print(
+        f"\nOOF Accuracy={aggregate['accuracy']:.4f} | "
+        f"OOF F1 Macro={aggregate['f1_macro']:.4f} | "
+        f"F1 entre folds={fold_summary['f1_macro']['mean']:.4f} ± {fold_summary['f1_macro']['std']:.4f}"
+    )
+    print(classification_report(truth, predicted, labels=LABELS, zero_division=0))
+    print(f"Resultados guardados em: {run_dir}")
+    print(f"Histórico guardado em: {args.history}")
+    print(f"Modelo final guardado em: {args.output}")
 
 
 if __name__ == "__main__":
