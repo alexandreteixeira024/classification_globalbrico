@@ -190,7 +190,7 @@ def make_training_args(output_dir: str, args, seed: int):
 
     return TrainingArguments(
         output_dir=output_dir,
-        use_cpu = True,
+        use_cpu = False,
         num_train_epochs=args.epochs,
         per_device_train_batch_size=args.batch_size,
         per_device_eval_batch_size=args.batch_size,
