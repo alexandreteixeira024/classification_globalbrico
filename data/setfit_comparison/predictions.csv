@@ -1,0 +1,89 @@
+﻿model,uid,fold,label_real,label_prevista
+BERTimbau base (fine-tuning tradicional),22545,1,SPAM,Pedido de Informação
+BERTimbau base (fine-tuning tradicional),22561,1,SPAM,Pedido de Informação
+BERTimbau base (fine-tuning tradicional),25980,3,Pedido de Informação,Pedido de Informação
+BERTimbau base (fine-tuning tradicional),26004,1,Pedido de Encomenda,Pedido de Encomenda
+BERTimbau base (fine-tuning tradicional),26007,5,Pedido de Encomenda,Pedido de Informação
+BERTimbau base (fine-tuning tradicional),26016,5,Pedido de Informação,Pedido de Informação
+BERTimbau base (fine-tuning tradicional),26054,1,Pedido de Informação,Pedido de Informação
+BERTimbau base (fine-tuning tradicional),26057,5,Pedido de Informação,Pedido de Informação
+BERTimbau base (fine-tuning tradicional),26505,4,Pedido de Informação,SPAM
+BERTimbau base (fine-tuning tradicional),26666,3,Pedido de Encomenda,Pedido de Informação
+BERTimbau base (fine-tuning tradicional),26730,2,Pedido de Encomenda,Pedido de Informação
+BERTimbau base (fine-tuning tradicional),26779,4,SPAM,Pedido de Informação
+BERTimbau base (fine-tuning tradicional),26995,2,Pedido de Informação,Pedido de Informação
+BERTimbau base (fine-tuning tradicional),27009,2,SPAM,Pedido de Informação
+BERTimbau base (fine-tuning tradicional),27018,3,SPAM,Pedido de Informação
+BERTimbau base (fine-tuning tradicional),27182,1,Pedido de Informação,Pedido de Informação
+BERTimbau base (fine-tuning tradicional),27453,4,Pedido de Encomenda,Pedido de Informação
+BERTimbau base (fine-tuning tradicional),27455,2,SPAM,Pedido de Informação
+BERTimbau base (fine-tuning tradicional),27459,4,Pedido de Informação,Pedido de Informação
+BERTimbau base (fine-tuning tradicional),27460,3,Pedido de Informação,Pedido de Encomenda
+BERTimbau base (fine-tuning tradicional),27462,2,Pedido de Encomenda,Pedido de Informação
+BERTimbau base (fine-tuning tradicional),27464,5,SPAM,Pedido de Informação
+XLM-R large XNLI (fine-tuning tradicional),22545,1,SPAM,Pedido de Informação
+XLM-R large XNLI (fine-tuning tradicional),22561,1,SPAM,Pedido de Informação
+XLM-R large XNLI (fine-tuning tradicional),25980,3,Pedido de Informação,SPAM
+XLM-R large XNLI (fine-tuning tradicional),26004,1,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (fine-tuning tradicional),26007,5,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (fine-tuning tradicional),26016,5,Pedido de Informação,Pedido de Encomenda
+XLM-R large XNLI (fine-tuning tradicional),26054,1,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (fine-tuning tradicional),26057,5,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (fine-tuning tradicional),26505,4,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (fine-tuning tradicional),26666,3,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (fine-tuning tradicional),26730,2,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (fine-tuning tradicional),26779,4,SPAM,Pedido de Informação
+XLM-R large XNLI (fine-tuning tradicional),26995,2,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (fine-tuning tradicional),27009,2,SPAM,SPAM
+XLM-R large XNLI (fine-tuning tradicional),27018,3,SPAM,SPAM
+XLM-R large XNLI (fine-tuning tradicional),27182,1,Pedido de Informação,Pedido de Encomenda
+XLM-R large XNLI (fine-tuning tradicional),27453,4,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (fine-tuning tradicional),27455,2,SPAM,Pedido de Informação
+XLM-R large XNLI (fine-tuning tradicional),27459,4,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (fine-tuning tradicional),27460,3,Pedido de Informação,Pedido de Encomenda
+XLM-R large XNLI (fine-tuning tradicional),27462,2,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (fine-tuning tradicional),27464,5,SPAM,Pedido de Encomenda
+XLM-R large XNLI (SetFit),22545,1,SPAM,Pedido de Encomenda
+XLM-R large XNLI (SetFit),22561,1,SPAM,Pedido de Encomenda
+XLM-R large XNLI (SetFit),25980,3,Pedido de Informação,Pedido de Encomenda
+XLM-R large XNLI (SetFit),26004,1,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (SetFit),26007,5,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (SetFit),26016,5,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (SetFit),26054,1,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (SetFit),26057,5,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (SetFit),26505,4,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (SetFit),26666,3,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (SetFit),26730,2,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (SetFit),26779,4,SPAM,Pedido de Informação
+XLM-R large XNLI (SetFit),26995,2,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (SetFit),27009,2,SPAM,SPAM
+XLM-R large XNLI (SetFit),27018,3,SPAM,SPAM
+XLM-R large XNLI (SetFit),27182,1,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (SetFit),27453,4,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (SetFit),27455,2,SPAM,Pedido de Informação
+XLM-R large XNLI (SetFit),27459,4,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (SetFit),27460,3,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (SetFit),27462,2,Pedido de Encomenda,Pedido de Encomenda
+XLM-R large XNLI (SetFit),27464,5,SPAM,Pedido de Informação
+BERTimbau base (SetFit),22545,1,SPAM,Pedido de Informação
+BERTimbau base (SetFit),22561,1,SPAM,Pedido de Informação
+BERTimbau base (SetFit),25980,3,Pedido de Informação,Pedido de Informação
+BERTimbau base (SetFit),26004,1,Pedido de Encomenda,Pedido de Informação
+BERTimbau base (SetFit),26007,5,Pedido de Encomenda,Pedido de Informação
+BERTimbau base (SetFit),26016,5,Pedido de Informação,Pedido de Informação
+BERTimbau base (SetFit),26054,1,Pedido de Informação,Pedido de Informação
+BERTimbau base (SetFit),26057,5,Pedido de Informação,Pedido de Informação
+BERTimbau base (SetFit),26505,4,Pedido de Informação,Pedido de Encomenda
+BERTimbau base (SetFit),26666,3,Pedido de Encomenda,Pedido de Encomenda
+BERTimbau base (SetFit),26730,2,Pedido de Encomenda,Pedido de Informação
+BERTimbau base (SetFit),26779,4,SPAM,Pedido de Informação
+BERTimbau base (SetFit),26995,2,Pedido de Informação,Pedido de Informação
+BERTimbau base (SetFit),27009,2,SPAM,SPAM
+BERTimbau base (SetFit),27018,3,SPAM,SPAM
+BERTimbau base (SetFit),27182,1,Pedido de Informação,Pedido de Informação
+BERTimbau base (SetFit),27453,4,Pedido de Encomenda,Pedido de Encomenda
+BERTimbau base (SetFit),27455,2,SPAM,Pedido de Informação
+BERTimbau base (SetFit),27459,4,Pedido de Informação,Pedido de Informação
+BERTimbau base (SetFit),27460,3,Pedido de Informação,Pedido de Encomenda
+BERTimbau base (SetFit),27462,2,Pedido de Encomenda,Pedido de Informação
+BERTimbau base (SetFit),27464,5,SPAM,Pedido de Informação
