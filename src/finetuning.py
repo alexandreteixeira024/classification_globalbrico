@@ -265,7 +265,8 @@ def make_model(base_model: str):
 def make_training_args(output_dir: str, args, seed: int) -> TrainingArguments:
     return TrainingArguments(
         output_dir=output_dir,
-        use_cpu = True, 
+        #Usar GPU NVIDIA, se não CPU 
+        use_cpu = not torch.cuda.is_available() and not torch.backends.mps.is_available(), 
         num_train_epochs=args.epochs,
         per_device_train_batch_size=args.batch_size,
         per_device_eval_batch_size=args.batch_size,

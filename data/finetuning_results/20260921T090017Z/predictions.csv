@@ -1,0 +1,38 @@
+﻿uid,fold,label_real,label_prevista,correto,score
+21173,3,SPAM,Pedido de Informação,False,0.99754
+21288,5,Pedido de Informação,Pedido de Informação,True,0.999433
+22545,4,SPAM,SPAM,True,0.446716
+22561,2,SPAM,SPAM,True,0.997888
+22683,4,Pedido de Informação,Pedido de Informação,True,0.675881
+22737,5,Pedido de Informação,Pedido de Informação,True,0.995673
+24351,4,Pedido de Informação,Pedido de Informação,True,0.653539
+24501,2,Pedido de Informação,Pedido de Informação,True,0.69108
+25634,4,Pedido de Informação,Pedido de Informação,True,0.637918
+25980,2,Pedido de Informação,Pedido de Informação,True,0.701054
+26004,3,Pedido de Encomenda,Pedido de Informação,False,0.989613
+26007,2,Pedido de Encomenda,Pedido de Informação,False,0.748392
+26016,3,Pedido de Informação,Pedido de Informação,True,0.996065
+26054,1,Pedido de Informação,SPAM,False,0.773437
+26057,1,Pedido de Informação,SPAM,False,0.773437
+26505,5,Pedido de Informação,Pedido de Encomenda,False,0.995442
+26591,3,Pedido de Informação,Pedido de Informação,True,0.998563
+26666,4,Pedido de Encomenda,Pedido de Informação,False,0.617039
+26730,1,Pedido de Encomenda,Pedido de Informação,False,0.542749
+26779,5,SPAM,SPAM,True,0.998589
+26995,3,Pedido de Informação,Pedido de Informação,True,0.993444
+27009,1,SPAM,SPAM,True,0.986669
+27018,1,SPAM,SPAM,True,0.987379
+27182,2,Pedido de Informação,Pedido de Informação,True,0.560425
+27448,2,Pedido de Encomenda,SPAM,False,0.819836
+27449,1,Pedido de Informação,Pedido de Informação,True,0.884044
+27450,1,Pedido de Informação,Pedido de Informação,True,0.811765
+27453,5,Pedido de Encomenda,SPAM,False,0.980269
+27455,1,SPAM,Pedido de Informação,False,0.987409
+27456,2,Pedido de Informação,Pedido de Informação,True,0.681548
+27457,4,SPAM,Pedido de Informação,False,0.582404
+27458,5,SPAM,Pedido de Encomenda,False,0.997867
+27459,1,Pedido de Informação,Pedido de Informação,True,0.963494
+27460,4,Pedido de Informação,Pedido de Informação,True,0.686013
+27462,4,Pedido de Encomenda,Pedido de Informação,False,0.650845
+27463,3,SPAM,Pedido de Informação,False,0.927892
+27464,2,SPAM,Pedido de Informação,False,0.616794
