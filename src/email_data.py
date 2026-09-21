@@ -11,12 +11,13 @@ LABELS = ("Pedido de Informação", "Pedido de Encomenda", "SPAM")
 
 def email_text(email):
     # Match the preprocessing used to fine-tune the saved checkpoint.
+    #Identificação do SPAM por vazio no assunto do email.
     subject = re.sub(
         r"^\s*(?:\*+SPAM\*+|\[SPAM\]|SPAM\b)[\s:_-]*",
         "",
         email.get("subject") or "",
         flags=re.I,
-    )
+    )   
     return "\n".join(
         part
         for part in (
@@ -27,11 +28,11 @@ def email_text(email):
         if part.strip()
     )
 
-
+#Carrega os emails classificados a partir de 'emails_classificação.csv'
 def load_labelled_emails(excel_path, email_dir):
     workbook = load_workbook(excel_path, read_only=True, data_only=True)
     try:
-        rows = workbook["Revisão"].iter_rows(values_only=True)
+        rows = workbook["Revisão"       ].iter_rows(values_only=True)
         header = next((row for row in rows if "UID" in row and "Label correta" in row), None)
         if header is None:
             raise ValueError("Não encontrei UID e Label correta no Excel.")

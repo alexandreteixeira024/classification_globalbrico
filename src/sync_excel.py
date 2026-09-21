@@ -273,11 +273,17 @@ def sync_emails(
 
     wb, ws, existing_uids = get_or_create_workbook(excel_path)
 
-    # 2. Filtrar apenas emails novos
+    # 2. Filtrar apenas mensagens iniciais novas. Respostas pertencem a uma
+    # conversa já existente e não fazem parte da triagem inicial.
     new_emails: List[Dict[str, Any]] = []
+    skipped_replies = 0
     for filepath in json_files:
         try:
             raw_data = json.loads(filepath.read_text(encoding="utf-8"))
+            #Se 'in_reply_to' = None, então avança. Não vai para o excel de classificação. 
+            if raw_data.get("in_reply_to") not in (None, ""):
+                skipped_replies += 1
+                continue
             norm = normalize_email(raw_data, filepath)
             if not norm["uid"]:
                 print(f"[Aviso] Ficheiro sem UID ignorado: {filepath.name}")
@@ -288,6 +294,9 @@ def sync_emails(
             existing_uids.add(norm["uid"])
         except Exception as err:
             print(f"[Erro] Falha ao ler {filepath.name}: {err}")
+
+    if skipped_replies:
+        print(f"Ignorados {skipped_replies} emails de resposta com in_reply_to preenchido.")
 
     if not new_emails:
         print(f"Nenhum email novo encontrado. O ficheiro Excel está atualizado ({len(existing_uids)} emails registados).")

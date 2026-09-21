@@ -89,16 +89,14 @@ python -m src.sync_excel
 python -m src.finetuning
 ```
 
-Cada execução faz 5-fold cross-validation agrupada por conversa. Em cada fold, cerca
-de 80% dos dados são usados para treino e 20% para teste; cada email é avaliado fora
-do treino exatamente uma vez. Os cinco modelos recomeçam sempre em
+Só entram no Excel e no fine-tuning mensagens iniciais cujo campo `in_reply_to` está
+vazio ou nulo. Respostas a conversas existentes são ignoradas.
+
+Cada execução faz 5-fold cross-validation estratificada apenas pela label. Em cada
+fold, cerca de 80% dos dados são usados para treino e 20% para teste; cada email é
+avaliado fora do treino exatamente uma vez. Os cinco modelos recomeçam sempre em
 `joeddav/xlm-roberta-large-xnli`. No fim, é treinado um sexto modelo com 100% dos
 dados, que fica disponível para produção.
-
-As conversas mantêm sempre o mesmo fold através de
-`data/finetuning_cv_folds.json`. Novas conversas são distribuídas pelos folds de
-forma equilibrada por classe. Isto evita colocar respostas da mesma conversa nos
-dois lados e reduz variação artificial entre execuções diárias.
 
 Cada execução cria `data/finetuning_results/<data-hora>/` com:
 
@@ -106,7 +104,7 @@ Cada execução cria `data/finetuning_results/<data-hora>/` com:
   confusão, parâmetros e dispersão entre folds;
 - `predictions.csv`: uma previsão out-of-fold para cada email;
 - `fold_metrics.csv`: métricas individuais dos cinco folds;
-- `folds.json`: UIDs atribuídos a cada fold.
+- `folds.json`: UIDs atribuídos a cada fold pela divisão estratificada.
 
 O ficheiro `data/finetuning_history.csv` acumula uma linha por execução e
 `data/finetuning_results/latest.json` aponta para o resultado mais recente. O
