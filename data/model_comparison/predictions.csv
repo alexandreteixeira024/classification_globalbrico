@@ -1,0 +1,89 @@
+﻿model,uid,fold,label_real,label_prevista
+XLM-R base (fine-tuning),22545,1,SPAM,Pedido de Informação
+XLM-R base (fine-tuning),22561,1,SPAM,Pedido de Informação
+XLM-R base (fine-tuning),25980,3,Pedido de Informação,Pedido de Encomenda
+XLM-R base (fine-tuning),26004,1,Pedido de Encomenda,Pedido de Informação
+XLM-R base (fine-tuning),26007,5,Pedido de Encomenda,Pedido de Informação
+XLM-R base (fine-tuning),26016,5,Pedido de Informação,Pedido de Informação
+XLM-R base (fine-tuning),26054,1,Pedido de Informação,Pedido de Informação
+XLM-R base (fine-tuning),26057,5,Pedido de Informação,Pedido de Informação
+XLM-R base (fine-tuning),26505,4,Pedido de Informação,Pedido de Encomenda
+XLM-R base (fine-tuning),26666,3,Pedido de Encomenda,Pedido de Encomenda
+XLM-R base (fine-tuning),26730,2,Pedido de Encomenda,Pedido de Informação
+XLM-R base (fine-tuning),26779,4,SPAM,Pedido de Encomenda
+XLM-R base (fine-tuning),26995,2,Pedido de Informação,Pedido de Informação
+XLM-R base (fine-tuning),27009,2,SPAM,Pedido de Informação
+XLM-R base (fine-tuning),27018,3,SPAM,Pedido de Encomenda
+XLM-R base (fine-tuning),27182,1,Pedido de Informação,Pedido de Informação
+XLM-R base (fine-tuning),27453,4,Pedido de Encomenda,Pedido de Encomenda
+XLM-R base (fine-tuning),27455,2,SPAM,Pedido de Informação
+XLM-R base (fine-tuning),27459,4,Pedido de Informação,Pedido de Encomenda
+XLM-R base (fine-tuning),27460,3,Pedido de Informação,Pedido de Encomenda
+XLM-R base (fine-tuning),27462,2,Pedido de Encomenda,Pedido de Informação
+XLM-R base (fine-tuning),27464,5,SPAM,Pedido de Informação
+BERTimbau base (fine-tuning),22545,1,SPAM,Pedido de Informação
+BERTimbau base (fine-tuning),22561,1,SPAM,Pedido de Informação
+BERTimbau base (fine-tuning),25980,3,Pedido de Informação,Pedido de Informação
+BERTimbau base (fine-tuning),26004,1,Pedido de Encomenda,Pedido de Encomenda
+BERTimbau base (fine-tuning),26007,5,Pedido de Encomenda,Pedido de Informação
+BERTimbau base (fine-tuning),26016,5,Pedido de Informação,Pedido de Informação
+BERTimbau base (fine-tuning),26054,1,Pedido de Informação,Pedido de Informação
+BERTimbau base (fine-tuning),26057,5,Pedido de Informação,Pedido de Informação
+BERTimbau base (fine-tuning),26505,4,Pedido de Informação,SPAM
+BERTimbau base (fine-tuning),26666,3,Pedido de Encomenda,Pedido de Informação
+BERTimbau base (fine-tuning),26730,2,Pedido de Encomenda,Pedido de Informação
+BERTimbau base (fine-tuning),26779,4,SPAM,Pedido de Informação
+BERTimbau base (fine-tuning),26995,2,Pedido de Informação,Pedido de Informação
+BERTimbau base (fine-tuning),27009,2,SPAM,Pedido de Informação
+BERTimbau base (fine-tuning),27018,3,SPAM,Pedido de Informação
+BERTimbau base (fine-tuning),27182,1,Pedido de Informação,Pedido de Informação
+BERTimbau base (fine-tuning),27453,4,Pedido de Encomenda,Pedido de Informação
+BERTimbau base (fine-tuning),27455,2,SPAM,Pedido de Informação
+BERTimbau base (fine-tuning),27459,4,Pedido de Informação,Pedido de Informação
+BERTimbau base (fine-tuning),27460,3,Pedido de Informação,Pedido de Encomenda
+BERTimbau base (fine-tuning),27462,2,Pedido de Encomenda,Pedido de Informação
+BERTimbau base (fine-tuning),27464,5,SPAM,Pedido de Informação
+XLM-R large XNLI (fine-tuning),22545,1,SPAM,Pedido de Informação
+XLM-R large XNLI (fine-tuning),22561,1,SPAM,Pedido de Informação
+XLM-R large XNLI (fine-tuning),25980,3,Pedido de Informação,SPAM
+XLM-R large XNLI (fine-tuning),26004,1,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (fine-tuning),26007,5,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (fine-tuning),26016,5,Pedido de Informação,Pedido de Encomenda
+XLM-R large XNLI (fine-tuning),26054,1,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (fine-tuning),26057,5,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (fine-tuning),26505,4,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (fine-tuning),26666,3,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (fine-tuning),26730,2,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (fine-tuning),26779,4,SPAM,Pedido de Informação
+XLM-R large XNLI (fine-tuning),26995,2,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (fine-tuning),27009,2,SPAM,SPAM
+XLM-R large XNLI (fine-tuning),27018,3,SPAM,SPAM
+XLM-R large XNLI (fine-tuning),27182,1,Pedido de Informação,Pedido de Encomenda
+XLM-R large XNLI (fine-tuning),27453,4,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (fine-tuning),27455,2,SPAM,Pedido de Informação
+XLM-R large XNLI (fine-tuning),27459,4,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (fine-tuning),27460,3,Pedido de Informação,Pedido de Encomenda
+XLM-R large XNLI (fine-tuning),27462,2,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (fine-tuning),27464,5,SPAM,Pedido de Encomenda
+XLM-R large XNLI (zero-shot),22545,1,SPAM,Pedido de Informação
+XLM-R large XNLI (zero-shot),22561,1,SPAM,Pedido de Informação
+XLM-R large XNLI (zero-shot),25980,3,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (zero-shot),26004,1,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (zero-shot),26007,5,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (zero-shot),26016,5,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (zero-shot),26054,1,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (zero-shot),26057,5,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (zero-shot),26505,4,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (zero-shot),26666,3,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (zero-shot),26730,2,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (zero-shot),26779,4,SPAM,Pedido de Informação
+XLM-R large XNLI (zero-shot),26995,2,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (zero-shot),27009,2,SPAM,Pedido de Informação
+XLM-R large XNLI (zero-shot),27018,3,SPAM,Pedido de Informação
+XLM-R large XNLI (zero-shot),27182,1,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (zero-shot),27453,4,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (zero-shot),27455,2,SPAM,Pedido de Informação
+XLM-R large XNLI (zero-shot),27459,4,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (zero-shot),27460,3,Pedido de Informação,Pedido de Informação
+XLM-R large XNLI (zero-shot),27462,2,Pedido de Encomenda,Pedido de Informação
+XLM-R large XNLI (zero-shot),27464,5,SPAM,Pedido de Informação

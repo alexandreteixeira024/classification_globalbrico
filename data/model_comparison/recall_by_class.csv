@@ -1,0 +1,5 @@
+﻿Modelo,Recall — Pedido de Informação,Recall — Pedido de Encomenda,Recall — SPAM
+XLM-R base (fine-tuning),0.5555555555555556,0.3333333333333333,0.0
+BERTimbau base (fine-tuning),0.7777777777777778,0.16666666666666666,0.0
+XLM-R large XNLI (fine-tuning),0.5555555555555556,0.0,0.2857142857142857
+XLM-R large XNLI (zero-shot),1.0,0.0,0.0

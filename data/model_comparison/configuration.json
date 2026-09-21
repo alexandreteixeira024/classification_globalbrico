@@ -1,0 +1,43 @@
+{
+  "seed": 42,
+  "folds": 5,
+  "epochs": 5,
+  "train_batch_size": 2,
+  "learning_rate": 2e-05,
+  "max_length": 512,
+  "supervised_models": {
+    "XLM-R base (fine-tuning)": "FacebookAI/xlm-roberta-base",
+    "BERTimbau base (fine-tuning)": "neuralmind/bert-base-portuguese-cased",
+    "XLM-R large XNLI (fine-tuning)": "joeddav/xlm-roberta-large-xnli"
+  },
+  "xnli_model": "joeddav/xlm-roberta-large-xnli",
+  "label_hypotheses": {
+    "Pedido de Informação": "Este email contém um pedido de informação, preço, orçamento ou esclarecimento.",
+    "Pedido de Encomenda": "Este email contém uma encomenda ou uma confirmação explícita de compra.",
+    "SPAM": "Este email é spam, fraude, publicidade não solicitada ou conteúdo comercial irrelevante."
+  },
+  "folds_by_uid": {
+    "22545": 1,
+    "22561": 1,
+    "26004": 1,
+    "26054": 1,
+    "27182": 1,
+    "26730": 2,
+    "26995": 2,
+    "27009": 2,
+    "27455": 2,
+    "27462": 2,
+    "25980": 3,
+    "26666": 3,
+    "27018": 3,
+    "27460": 3,
+    "26505": 4,
+    "26779": 4,
+    "27453": 4,
+    "27459": 4,
+    "26007": 5,
+    "26016": 5,
+    "26057": 5,
+    "27464": 5
+  }
+}
