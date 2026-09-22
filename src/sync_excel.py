@@ -26,7 +26,7 @@ from .email_data import LABELS, email_text
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_INPUT_DIR = ROOT / "data/globalbrico_emails"
 DEFAULT_EXCEL_PATH = ROOT / "data/emails_classificacao.xlsx"
-DEFAULT_MODEL_DIR = ROOT / "src/models/xlm_roberta_large_xnli_finetuned"
+DEFAULT_MODEL_DIR = ROOT / "src/models/bertimbau_setfit"
 SPAM_IN_SUBJECT = re.compile(r"\bSPAM\b", re.IGNORECASE)
 
 COLUMNS = [
@@ -147,31 +147,34 @@ def copy_new_files_from_source(source_dir: Path, target_dir: Path) -> int:
 
 
 class TransformerClassifier:
-    """Carrega o modelo fine-tuned para classificar novos emails."""
+    """Carrega o modelo SetFit de produção para classificar novos emails."""
 
     def __init__(self, model_dir: Path):
         self.model_dir = model_dir
-        self._pipeline = None
+        self._model = None
 
-    def _load_pipeline(self):
-        if self._pipeline is None:
-            from transformers import pipeline
-            self._pipeline = pipeline(
-                "text-classification",
-                model=str(self.model_dir),
-                tokenizer=str(self.model_dir),
-            )
+    def _load_model(self):
+        if self._model is None:
+            from setfit import SetFitModel
+
+            self._model = SetFitModel.from_pretrained(str(self.model_dir))
 
     def predict(self, email_norm: Dict[str, Any]) -> Tuple[str, Optional[float]]:
         subject = email_norm["subject"]
         if SPAM_IN_SUBJECT.search(subject):
             return "SPAM", 1.0
 
-        self._load_pipeline()
+        self._load_model()
         formatted_text = email_text(email_norm["raw"])
-        result = self._pipeline(formatted_text, truncation=True, max_length=512)[0]
-        label = canonical_label(result["label"])
-        score = round(float(result["score"]), 4)
+        probabilities = self._model.predict_proba(
+            [formatted_text],
+            as_numpy=True,
+            show_progress_bar=False,
+        )[0]
+        predicted_index = int(probabilities.argmax())
+        model_labels = self._model.labels or list(LABELS)
+        label = canonical_label(model_labels[predicted_index])
+        score = round(float(probabilities[predicted_index]), 4)
         return label, score
 
 
@@ -304,16 +307,16 @@ def sync_emails(
 
     print(f"Detetados {len(new_emails)} novos emails. A processar...")
 
-    # 3. Classificação com Transformer (opcional / se disponível)
+    # 3. Classificação com SetFit (opcional / se disponível)
     classifier = None
     if predict_transformer and model_dir and model_dir.is_dir():
         try:
             classifier = TransformerClassifier(model_dir)
-            print(f"Classificador Transformer carregado de: {model_dir}")
+            print(f"Classificador SetFit carregado de: {model_dir}")
         except Exception as err:
-            print(f"[Aviso] Não foi possível carregar o Transformer ({err}). Coluna ficará vazia.")
+            print(f"[Aviso] Não foi possível carregar o SetFit ({err}). Coluna ficará vazia.")
     elif predict_transformer and model_dir:
-        print(f"[Info] Modelo Transformer não encontrado em {model_dir}. Coluna ficará vazia.")
+        print(f"[Info] Modelo SetFit não encontrado em {model_dir}. Coluna ficará vazia.")
 
     # Estilos das novas células
     regular_font = Font(name="Calibri", size=10)
@@ -422,7 +425,7 @@ def main():
         "--model-dir",
         type=Path,
         default=DEFAULT_MODEL_DIR,
-        help=f"Diretório do modelo transformer fine-tuned (defeito: {DEFAULT_MODEL_DIR.relative_to(ROOT)}).",
+        help=f"Diretório do modelo SetFit treinado (defeito: {DEFAULT_MODEL_DIR.relative_to(ROOT)}).",
     )
     parser.add_argument(
         "--no-transformer",

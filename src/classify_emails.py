@@ -1,12 +1,10 @@
-"""Classify extracted JSON emails with the fine-tuned XLM-RoBERTa checkpoint."""
+"""Classify extracted JSON emails with the production SetFit checkpoint."""
 
 import argparse
 import csv
 import json
 import re
 from pathlib import Path
-
-from transformers import pipeline
 
 from .email_data import LABELS, email_text
 
@@ -17,7 +15,7 @@ SPAM_IN_SUBJECT = re.compile(r"\bSPAM\b", re.IGNORECASE)
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input-dir", type=Path, default=ROOT / "data/extracted_emails")
-    parser.add_argument("--model", type=Path, default=ROOT / "src/models/xlm_roberta_large_xnli_finetuned")
+    parser.add_argument("--model", type=Path, default=ROOT / "src/models/bertimbau_setfit")
     parser.add_argument("--output", type=Path, default=ROOT / "data/classified_emails.csv")
     args = parser.parse_args()
     if not args.model.is_dir():
@@ -39,9 +37,18 @@ def main():
                 label, score, source = "SPAM", "", "subject_rule"
             else:
                 if classifier is None:
-                    classifier = pipeline("text-classification", model=str(args.model), tokenizer=str(args.model))
-                result = classifier(email_text(email), truncation=True, max_length=512)[0]
-                label, score, source = result["label"], result["score"], "transformer"
+                    from setfit import SetFitModel
+
+                    classifier = SetFitModel.from_pretrained(str(args.model))
+                probabilities = classifier.predict_proba(
+                    [email_text(email)],
+                    as_numpy=True,
+                    show_progress_bar=False,
+                )[0]
+                predicted_index = int(probabilities.argmax())
+                model_labels = classifier.labels or list(LABELS)
+                label = model_labels[predicted_index]
+                score, source = float(probabilities[predicted_index]), "setfit"
                 if label not in LABELS:
                     raise ValueError(f"Label inesperada no modelo: {label}")
             writer.writerow({"uid": email["uid"], "label": label, "score": score, "source": source})

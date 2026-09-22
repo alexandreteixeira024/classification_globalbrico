@@ -50,12 +50,12 @@ No Lovable, envia cada novo email para `POST /v1/emails` com
 O endpoint responde com HTTP `202` e `{}`. O mesmo `id` pode ser reenviado sem
 criar duplicados. `GET /health` permite verificar se o serviço está ativo.
 
-O classificador de produção carrega `src/models/xlm_roberta_large_xnli_finetuned/`. Para experimentar com os emails já extraídos, indica `--input-dir research/extracted_emails`. A extração nova guarda JSON em `data/extracted_emails/`.
+O classificador de produção carrega o modelo SetFit em `src/models/bertimbau_setfit/`. Para experimentar com os emails já extraídos, indica `--input-dir research/extracted_emails`. A extração nova guarda JSON em `data/extracted_emails/`.
 Cada execução da extração mostra quantos emails chegaram à pasta desde a última verificação. O ponto de comparação é guardado em `data/extracted_emails/.extraction_state`, por servidor, conta e pasta. `--limite` continua a controlar quantos emails são extraídos, independentemente da contagem de novos.
 
 ## Gestão e Anotação Incremental de Novos Emails (Excel)
 
-Para classificar emails novos à medida que vão chegando (sem alterar a base histórica em `data/extracted_emails/`) e comparar com outra IA e com o Transformer:
+Para classificar emails novos à medida que vão chegando (sem alterar a base histórica em `data/extracted_emails/`) e comparar com outra IA e com o SetFit:
 
 ```bash
 # Execução padrão (lê data/incoming_emails/ e atualiza data/emails_classificacao.xlsx)
@@ -64,7 +64,7 @@ python -m src.sync_excel
 # Cópia direta e automática de uma pasta externa + atualização do Excel
 python -m src.sync_excel --source-dir /caminho/para/pasta_externa
 
-# Sem executar o transformer automaticamente
+# Sem executar o SetFit automaticamente
 python -m src.sync_excel --no-transformer
 ```
 
@@ -73,7 +73,7 @@ python -m src.sync_excel --no-transformer
 2. **Folha `Revisão`**:
    - `Label correta`: Lista suspensa (*dropdown*) com `Pedido de Informação`, `Pedido de Encomenda` e `SPAM` para anotação humana rápida e sem gralhas.
    - `Label Outra IA`: Registada a partir do JSON (se já existir no payload) ou para preenchimento manual da IA externa a comparar.
-   - `Label Transformer` e `Score Transformer`: Previsão e probabilidade calculadas automaticamente pelo modelo fine-tuned de produção.
+   - `Label Transformer` e `Score Transformer`: Previsão e probabilidade calculadas automaticamente pelo modelo SetFit de produção. Os nomes das colunas são mantidos por compatibilidade com o Excel existente.
    - `Concordância Outra IA` e `Concordância Transformer`: Fórmulas automáticas de concordância (`Concorda`, `Diverge` ou `Pendente`).
 3. **Compatibilidade com Fine-Tuning**: A folha `Revisão` é compatível com `src/finetuning.py` e `src/email_data.py`.
 
@@ -92,11 +92,12 @@ python -m src.finetuning
 Só entram no Excel e no fine-tuning mensagens iniciais cujo campo `in_reply_to` está
 vazio ou nulo. Respostas a conversas existentes são ignoradas.
 
-Cada execução faz 5-fold cross-validation estratificada apenas pela label. Em cada
+Cada execução usa SetFit e faz 5-fold cross-validation estratificada apenas pela label. Em cada
 fold, cerca de 80% dos dados são usados para treino e 20% para teste; cada email é
 avaliado fora do treino exatamente uma vez. Os cinco modelos recomeçam sempre em
-`joeddav/xlm-roberta-large-xnli`. No fim, é treinado um sexto modelo com 100% dos
-dados, que fica disponível para produção.
+`neuralmind/bert-base-portuguese-cased`. O SetFit ajusta os embeddings por treino
+contrastivo e treina uma regressão logística para as três labels. No fim, é treinado
+um sexto modelo com 100% dos dados e guardado em `src/models/bertimbau_setfit/`.
 
 Cada execução cria `data/finetuning_results/<data-hora>/` com:
 

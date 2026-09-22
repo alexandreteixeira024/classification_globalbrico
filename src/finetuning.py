@@ -1,4 +1,4 @@
-"""Fine-tuning diário com 5-fold cross-validation e histórico de resultados.
+"""Treino diário SetFit com 5-fold cross-validation e histórico de resultados.
 
 Executar da raiz do projeto:
     python -m src.finetuning
@@ -31,10 +31,10 @@ from torch.utils.data import Dataset
 from .email_data import LABELS, email_text
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_BASE_MODEL = "joeddav/xlm-roberta-large-xnli"
+DEFAULT_BASE_MODEL = "neuralmind/bert-base-portuguese-cased"
 DEFAULT_EXCEL = ROOT / "data/emails_classificacao.xlsx"
 DEFAULT_EMAILS_DIR = ROOT / "data/globalbrico_emails"
-DEFAULT_OUTPUT = ROOT / "src/models/xlm_roberta_large_xnli_finetuned"
+DEFAULT_OUTPUT = ROOT / "src/models/bertimbau_setfit"
 DEFAULT_RESULTS_DIR = ROOT / "data/finetuning_results"
 DEFAULT_HISTORY = ROOT / "data/finetuning_history.csv"
 DEFAULT_FOLDS = 5
@@ -186,6 +186,7 @@ def make_model(base_model: str):
 
 
 def make_training_args(output_dir: str, args, seed: int):
+    """Argumentos do fine-tuning tradicional, mantidos para experiências históricas."""
     from transformers import TrainingArguments
 
     return TrainingArguments(
@@ -201,6 +202,53 @@ def make_training_args(output_dir: str, args, seed: int):
         seed=seed,
         data_seed=seed,
     )
+
+
+def make_setfit_dataset(examples: List[Example]):
+    from datasets import Dataset as HuggingFaceDataset
+
+    return HuggingFaceDataset.from_dict({
+        "text": [text for _uid, text, _label in examples],
+        "label": [LABELS.index(label) for _uid, _text, label in examples],
+    })
+
+
+def make_setfit_model(base_model: str, device: str):
+    from setfit import SetFitModel
+
+    model = SetFitModel.from_pretrained(
+        base_model,
+        labels=list(LABELS),
+        device=device,
+    )
+    return model
+
+
+def make_setfit_training_args(output_dir: str, args, seed: int, use_amp: bool):
+    from setfit import TrainingArguments as SetFitTrainingArguments
+
+    return SetFitTrainingArguments(
+        output_dir=output_dir,
+        batch_size=args.batch_size,
+        num_epochs=args.epochs,
+        body_learning_rate=args.learning_rate,
+        max_length=args.max_length,
+        sampling_strategy="oversampling",
+        use_amp=use_amp,
+        show_progress_bar=True,
+        logging_strategy="no",
+        save_strategy="no",
+        report_to="none",
+        seed=seed,
+    )
+
+
+def training_device() -> str:
+    if torch.cuda.is_available():
+        return "cuda"
+    if torch.backends.mps.is_available():
+        return "mps"
+    return "cpu"
 
 
 def clear_device_cache() -> None:
@@ -307,7 +355,7 @@ def paired_with_previous(results_dir: Path, current_rows: List[Dict], method: st
 
 
 def main():
-    from transformers import AutoTokenizer, DataCollatorWithPadding, Trainer, set_seed
+    from transformers import set_seed
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base-model", default=DEFAULT_BASE_MODEL)
@@ -317,17 +365,22 @@ def main():
     parser.add_argument("--results-dir", type=Path, default=DEFAULT_RESULTS_DIR)
     parser.add_argument("--history", type=Path, default=DEFAULT_HISTORY)
     parser.add_argument("--folds", type=int, default=DEFAULT_FOLDS)
-    parser.add_argument("--epochs", type=float, default=5)
+    parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch-size", type=int, default=2)
+    parser.add_argument("--eval-batch-size", type=int, default=8)
     parser.add_argument("--learning-rate", type=float, default=2e-5)
     parser.add_argument("--max-length", type=int, default=512)
     parser.add_argument("--seed", type=int, default=42)
     args = parser.parse_args()
 
+    from setfit import Trainer as SetFitTrainer
+
     if args.folds < 2:
         parser.error("--folds tem de ser pelo menos 2.")
-    if args.epochs <= 0 or args.batch_size <= 0 or args.max_length < 32:
-        parser.error("Épocas e batch size têm de ser positivos; max-length tem de ser pelo menos 32.")
+    if args.epochs <= 0 or args.batch_size <= 0 or args.eval_batch_size <= 0 or args.max_length < 32:
+        parser.error(
+            "Épocas e batch sizes têm de ser positivos; max-length tem de ser pelo menos 32."
+        )
 
     examples = load_examples(args.excel, args.emails_dir or [DEFAULT_EMAILS_DIR])
     print(f"Emails rotulados: {len(examples)}")
@@ -346,11 +399,11 @@ def main():
         suffix += 1
     run_dir.mkdir(parents=True)
 
-    tokenizer = AutoTokenizer.from_pretrained(args.base_model)
-    collator = DataCollatorWithPadding(tokenizer)
+    device = training_device()
+    use_amp = device == "cuda"
+    print(f"Dispositivo de treino: {device}")
     predictions = []
     fold_metrics = []
-    fold_logs = {}
 
     for fold_index, test_examples in enumerate(folds):
         test_uids = {item[0] for item in test_examples}
@@ -359,23 +412,26 @@ def main():
         set_seed(fold_seed)
         print(f"\n=== Fold {fold_index + 1}/{args.folds}: treino={len(train_examples)}, teste={len(test_examples)} ===")
 
-        train_dataset = EmailDataset(train_examples, tokenizer, args.max_length)
-        test_dataset = EmailDataset(test_examples, tokenizer, args.max_length)
+        train_dataset = make_setfit_dataset(train_examples)
         with tempfile.TemporaryDirectory(prefix=f"globalbrico-fold-{fold_index + 1}-") as temporary:
-            model = make_model(args.base_model)
-            trainer = Trainer(
+            model = make_setfit_model(args.base_model, device)
+            model.model_body.max_seq_length = args.max_length
+            trainer = SetFitTrainer(
                 model=model,
-                args=make_training_args(temporary, args, fold_seed),
+                args=make_setfit_training_args(temporary, args, fold_seed, use_amp),
                 train_dataset=train_dataset,
-                data_collator=collator,
-                processing_class=tokenizer,
             )
             trainer.train()
-            output = trainer.predict(test_dataset)
-            logits = output.predictions
-            predicted_indices = np.argmax(logits, axis=-1)
+            probabilities = np.asarray(model.predict_proba(
+                [text for _uid, text, _label in test_examples],
+                batch_size=args.eval_batch_size,
+                as_numpy=True,
+                show_progress_bar=False,
+            ))
+            predicted_indices = np.argmax(probabilities, axis=-1)
             predicted_labels = [LABELS[index] for index in predicted_indices]
-            fold_score = scores(test_dataset.labels, predicted_labels)
+            test_labels = [label for _uid, _text, label in test_examples]
+            fold_score = scores(test_labels, predicted_labels)
             fold_metrics.append({
                 "fold": fold_index + 1,
                 "n_train": len(train_examples),
@@ -385,21 +441,18 @@ def main():
                 "recall_macro": fold_score["recall_macro"],
                 "f1_macro": fold_score["f1_macro"],
             })
-            fold_logs[str(fold_index + 1)] = trainer.state.log_history
-            for uid, label, predicted_index, logit in zip(
-                test_dataset.uids, test_dataset.labels, predicted_indices, logits
+            for (uid, _text, label), predicted_index, probability_row in zip(
+                test_examples, predicted_indices, probabilities
             ):
-                probabilities = np.exp(logit - np.max(logit))
-                probabilities = probabilities / probabilities.sum()
                 predictions.append({
                     "uid": uid,
                     "fold": fold_index + 1,
                     "label_real": label,
                     "label_prevista": LABELS[predicted_index],
                     "correto": label == LABELS[predicted_index],
-                    "score": round(float(probabilities[predicted_index]), 6),
+                    "score": round(float(probability_row[predicted_index]), 6),
                 })
-            del output, logits, trainer, model, train_dataset, test_dataset
+            del probabilities, trainer, model, train_dataset
             clear_device_cache()
 
     if len(predictions) != len(examples) or len({row["uid"] for row in predictions}) != len(examples):
@@ -409,7 +462,7 @@ def main():
     truth = [row["label_real"] for row in predictions]
     predicted = [row["label_prevista"] for row in predictions]
     aggregate = scores(truth, predicted)
-    method = f"{args.folds}-fold-stratified-cross-validation"
+    method = f"{args.folds}-fold-stratified-setfit-cross-validation"
     paired = paired_with_previous(args.results_dir, predictions, method)
     fold_summary = {
         metric: {
@@ -422,28 +475,26 @@ def main():
     write_csv(run_dir / "predictions.csv", predictions)
     write_csv(run_dir / "fold_metrics.csv", fold_metrics)
     save_json(run_dir / "folds.json", {
-        "method": "stratified-by-label",
+        "method": "stratified-by-label-setfit",
         "folds": {
             str(index + 1): sorted(item[0] for item in fold)
             for index, fold in enumerate(folds)
         },
     })
 
-    print("\n=== Treino final de produção com 100% dos dados ===")
+    print("\n=== Treino SetFit final de produção com 100% dos dados ===")
     set_seed(args.seed)
-    full_dataset = EmailDataset(examples, tokenizer, args.max_length)
-    final_model = make_model(args.base_model)
-    final_trainer = Trainer(
+    full_dataset = make_setfit_dataset(examples)
+    final_model = make_setfit_model(args.base_model, device)
+    final_model.model_body.max_seq_length = args.max_length
+    final_trainer = SetFitTrainer(
         model=final_model,
-        args=make_training_args(str(args.output), args, args.seed),
+        args=make_setfit_training_args(str(args.output), args, args.seed, use_amp),
         train_dataset=full_dataset,
-        data_collator=collator,
-        processing_class=tokenizer,
     )
     final_trainer.train()
     args.output.mkdir(parents=True, exist_ok=True)
-    final_trainer.save_model(str(args.output))
-    tokenizer.save_pretrained(args.output)
+    final_model.save_pretrained(str(args.output))
 
     previous = None
     if args.history.exists():
@@ -458,6 +509,8 @@ def main():
         "run_id": run_dir.name,
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "method": method,
+        "training_method": "setfit",
+        "classification_head": "logistic-regression",
         "dataset_fingerprint": dataset_fingerprint(examples),
         "base_model": args.base_model,
         "output_model": str(args.output),
@@ -465,9 +518,11 @@ def main():
         "folds": args.folds,
         "epochs": args.epochs,
         "batch_size": args.batch_size,
+        "eval_batch_size": args.eval_batch_size,
         "learning_rate": args.learning_rate,
         "max_length": args.max_length,
         "seed": args.seed,
+        "device": device,
         **aggregate,
         "fold_metrics": fold_metrics,
         "fold_summary": fold_summary,
@@ -478,8 +533,6 @@ def main():
         "delta_f1_macro_previous_run": (
             aggregate["f1_macro"] - float(previous["f1_macro"]) if previous else None
         ),
-        "fold_training_logs": fold_logs,
-        "final_training_log": final_trainer.state.log_history,
     }
     save_json(run_dir / "metrics.json", metrics)
 

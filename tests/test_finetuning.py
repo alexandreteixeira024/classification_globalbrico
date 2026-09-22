@@ -4,10 +4,11 @@ import unittest
 from collections import Counter
 from pathlib import Path
 
+import numpy as np
 import openpyxl
 
 from src.finetuning import load_examples, stratified_folds
-from src.sync_excel import sync_emails
+from src.sync_excel import TransformerClassifier, sync_emails
 
 
 LABELS = ("Pedido de Informação", "Pedido de Encomenda", "SPAM")
@@ -81,6 +82,24 @@ class StratifiedFoldTests(unittest.TestCase):
 
         self.assertEqual(added, 1)
         self.assertEqual([row[0] for row in values[1:]], ["initial"])
+
+    def test_setfit_classifier_uses_saved_label_order_and_probability(self):
+        class FakeSetFitModel:
+            labels = ["Pedido de Informação", "Pedido de Encomenda", "SPAM"]
+
+            def predict_proba(self, texts, **_kwargs):
+                self.texts = texts
+                return np.asarray([[0.1, 0.7, 0.2]])
+
+        classifier = TransformerClassifier(Path("unused"))
+        classifier._model = FakeSetFitModel()
+        label, score = classifier.predict({
+            "subject": "Pedido novo",
+            "raw": {"subject": "Pedido novo", "from": "cliente@example.com", "text": "Quero encomendar."},
+        })
+
+        self.assertEqual(label, "Pedido de Encomenda")
+        self.assertEqual(score, 0.7)
 
 
 if __name__ == "__main__":

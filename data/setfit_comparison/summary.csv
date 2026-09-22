@@ -1,5 +1,0 @@
-﻿Modelo,Accuracy,Recall macro
-XLM-R large XNLI (fine-tuning tradicional),0.3181818181818182,0.2804232804232804
-XLM-R large XNLI (SetFit),0.5,0.44708994708994715
-BERTimbau base (fine-tuning tradicional),0.3636363636363636,0.3148148148148148
-BERTimbau base (SetFit),0.5,0.4656084656084656
