@@ -1,0 +1,25 @@
+﻿uid,fold,label_real,label_prevista,correto,score
+22545,1,SPAM,SPAM,True,0.995407
+22561,3,SPAM,SPAM,True,0.996007
+25980,3,Pedido de Informação,Pedido de Informação,True,0.788446
+26004,1,Pedido de Encomenda,Pedido de Informação,False,0.957487
+26007,5,Pedido de Encomenda,Pedido de Informação,False,0.972567
+26016,5,Pedido de Informação,Pedido de Informação,True,0.981507
+26054,1,Pedido de Informação,Pedido de Informação,True,0.996484
+26057,2,Pedido de Informação,Pedido de Informação,True,0.998109
+26505,4,Pedido de Informação,Pedido de Encomenda,False,0.974213
+26666,3,Pedido de Encomenda,Pedido de Informação,False,0.544986
+26730,2,Pedido de Encomenda,Pedido de Encomenda,True,0.518003
+26779,1,SPAM,Pedido de Informação,False,0.725537
+26995,5,Pedido de Informação,Pedido de Informação,True,0.844745
+27009,5,SPAM,SPAM,True,0.998432
+27018,2,SPAM,SPAM,True,0.997821
+27182,2,Pedido de Informação,Pedido de Informação,True,0.795689
+27453,4,Pedido de Encomenda,Pedido de Encomenda,True,0.985806
+27455,3,SPAM,Pedido de Informação,False,0.847613
+27459,1,Pedido de Informação,Pedido de Encomenda,False,0.827983
+27460,4,Pedido de Informação,Pedido de Informação,True,0.762285
+27462,4,Pedido de Encomenda,Pedido de Encomenda,True,0.65951
+27464,2,SPAM,SPAM,True,0.994799
+27466,3,Pedido de Encomenda,Pedido de Informação,False,0.854768
+27468,4,SPAM,SPAM,True,0.620176
