@@ -117,6 +117,14 @@ adequada quando a base de dados cresce entre execuções.
 
 ## Comparar abordagens
 
+Para comparar o SetFit atual com TF-IDF + regressão logística, TF-IDF + SVM
+linear e fine-tuning tradicional do BERTimbau, usa
+`research/compare_tfidf_svm_transformer.ipynb`. O notebook reutiliza os mesmos
+cinco folds, valida o fingerprint dos resultados SetFit e guarda previsões por
+UID em `data/comparison_benchmark/`. O treino tradicional do transformer está
+desativado por defeito; define `RUN_TRANSFORMER = True` no notebook para o
+executar.
+
 O comparador avalia o checkpoint fine-tuned, `google/flan-t5-base` e um Ollama `qwen2.5:3b`. O Ollama tem de estar ativo e o modelo disponível localmente:
 
 ```bash
