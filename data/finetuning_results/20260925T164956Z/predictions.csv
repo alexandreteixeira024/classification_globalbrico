@@ -1,0 +1,40 @@
+﻿uid,fold,label_real,label_prevista,correto,score
+22545,4,SPAM,Pedido de Informação,False,0.694357
+22561,4,SPAM,Pedido de Informação,False,0.531214
+25980,4,Pedido de Informação,Pedido de Informação,True,0.977975
+26004,4,Pedido de Encomenda,Pedido de Encomenda,True,0.825829
+26007,3,Pedido de Encomenda,Pedido de Informação,False,0.998293
+26016,5,Pedido de Informação,Pedido de Informação,True,0.980882
+26054,1,Pedido de Informação,Pedido de Informação,True,0.998566
+26057,3,Pedido de Informação,Pedido de Informação,True,0.998513
+26505,3,Pedido de Informação,Pedido de Encomenda,False,0.955874
+26666,5,Pedido de Encomenda,Pedido de Informação,False,0.989502
+26730,2,Pedido de Encomenda,Pedido de Informação,False,0.997778
+26779,1,SPAM,Pedido de Informação,False,0.985868
+26995,4,Pedido de Informação,Pedido de Informação,True,0.997038
+27009,5,SPAM,SPAM,True,0.99876
+27018,2,SPAM,SPAM,True,0.998653
+27182,2,Pedido de Informação,Pedido de Informação,True,0.771698
+27453,1,Pedido de Encomenda,Pedido de Encomenda,True,0.987237
+27455,3,SPAM,Pedido de Informação,False,0.982585
+27459,5,Pedido de Informação,Pedido de Informação,True,0.998008
+27460,1,Pedido de Informação,Pedido de Informação,True,0.962676
+27462,4,Pedido de Encomenda,Pedido de Informação,False,0.986078
+27464,1,SPAM,SPAM,True,0.982122
+27466,2,Pedido de Encomenda,SPAM,False,0.762753
+27468,1,SPAM,Pedido de Encomenda,False,0.91695
+27474,2,Pedido de Informação,SPAM,False,0.55625
+27475,2,Pedido de Informação,Pedido de Informação,True,0.948711
+27477,1,Pedido de Informação,Pedido de Informação,True,0.584373
+27478,5,SPAM,SPAM,True,0.989695
+27485,2,SPAM,SPAM,True,0.996853
+27489,5,Pedido de Informação,Pedido de Informação,True,0.998379
+27492,3,SPAM,Pedido de Encomenda,False,0.995375
+27496,3,Pedido de Informação,Pedido de Informação,True,0.991341
+27498,1,Pedido de Encomenda,Pedido de Encomenda,True,0.996092
+27499,4,SPAM,Pedido de Informação,False,0.98467
+27500,4,Pedido de Encomenda,Pedido de Encomenda,True,0.824281
+27503,2,SPAM,Pedido de Informação,False,0.995399
+27504,3,Pedido de Encomenda,Pedido de Informação,False,0.98925
+27505,5,Pedido de Encomenda,Pedido de Encomenda,True,0.965394
+27507,3,SPAM,Pedido de Informação,False,0.994197
