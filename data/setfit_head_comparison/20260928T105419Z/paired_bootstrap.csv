@@ -1,0 +1,2 @@
+﻿Comparação,Delta accuracy,IC95% delta accuracy,Delta macro-F1,IC95% delta macro-F1
+SVM calibrado - Regressão Logística,0.0,"(np.float64(0.0), np.float64(0.0))",0.0,"(np.float64(0.0), np.float64(0.0))"

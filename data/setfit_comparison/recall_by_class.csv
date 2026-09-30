@@ -1,0 +1,5 @@
+﻿Modelo,Recall — Pedido de Informação,Recall — Pedido de Encomenda,Recall — SPAM
+XLM-R large XNLI (fine-tuning tradicional),0.2857142857142857,0.4545454545454545,0.5
+XLM-R large XNLI (SetFit),0.35714285714285715,0.36363636363636365,0.625
+BERTimbau base (fine-tuning tradicional),0.6428571428571429,0.0909090909090909,0.375
+BERTimbau base (SetFit),0.7142857142857143,0.45454545454545453,0.5625

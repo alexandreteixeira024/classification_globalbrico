@@ -1,0 +1,247 @@
+﻿model,uid,fold,label_real,label_prevista
+Dummy — classe mais frequente,22545,1,SPAM,Pedido de Informação
+Dummy — classe mais frequente,22561,1,SPAM,Pedido de Informação
+Dummy — classe mais frequente,25980,4,Pedido de Informação,SPAM
+Dummy — classe mais frequente,26004,1,Pedido de Encomenda,Pedido de Informação
+Dummy — classe mais frequente,26007,3,Pedido de Encomenda,SPAM
+Dummy — classe mais frequente,26016,2,Pedido de Informação,SPAM
+Dummy — classe mais frequente,26054,5,Pedido de Informação,SPAM
+Dummy — classe mais frequente,26057,3,Pedido de Informação,SPAM
+Dummy — classe mais frequente,26505,4,Pedido de Informação,SPAM
+Dummy — classe mais frequente,26666,2,Pedido de Encomenda,SPAM
+Dummy — classe mais frequente,26730,4,Pedido de Encomenda,SPAM
+Dummy — classe mais frequente,26779,2,SPAM,SPAM
+Dummy — classe mais frequente,26995,4,Pedido de Informação,SPAM
+Dummy — classe mais frequente,27009,5,SPAM,SPAM
+Dummy — classe mais frequente,27018,5,SPAM,SPAM
+Dummy — classe mais frequente,27182,2,Pedido de Informação,SPAM
+Dummy — classe mais frequente,27453,1,Pedido de Encomenda,Pedido de Informação
+Dummy — classe mais frequente,27455,4,SPAM,SPAM
+Dummy — classe mais frequente,27459,1,Pedido de Informação,Pedido de Informação
+Dummy — classe mais frequente,27460,5,Pedido de Informação,SPAM
+Dummy — classe mais frequente,27462,4,Pedido de Encomenda,SPAM
+Dummy — classe mais frequente,27464,3,SPAM,SPAM
+Dummy — classe mais frequente,27466,3,Pedido de Encomenda,SPAM
+Dummy — classe mais frequente,27468,3,SPAM,SPAM
+Dummy — classe mais frequente,27474,5,Pedido de Informação,SPAM
+Dummy — classe mais frequente,27475,3,Pedido de Informação,SPAM
+Dummy — classe mais frequente,27477,3,Pedido de Informação,SPAM
+Dummy — classe mais frequente,27478,1,SPAM,Pedido de Informação
+Dummy — classe mais frequente,27485,5,SPAM,SPAM
+Dummy — classe mais frequente,27489,1,Pedido de Informação,Pedido de Informação
+Dummy — classe mais frequente,27492,2,SPAM,SPAM
+Dummy — classe mais frequente,27496,2,Pedido de Informação,SPAM
+Dummy — classe mais frequente,27498,2,Pedido de Encomenda,SPAM
+Dummy — classe mais frequente,27499,3,SPAM,SPAM
+Dummy — classe mais frequente,27500,1,Pedido de Encomenda,Pedido de Informação
+Dummy — classe mais frequente,27503,4,SPAM,SPAM
+Dummy — classe mais frequente,27504,5,Pedido de Encomenda,SPAM
+Dummy — classe mais frequente,27505,5,Pedido de Encomenda,SPAM
+Dummy — classe mais frequente,27507,4,SPAM,SPAM
+Dummy — classe mais frequente,27510,1,SPAM,Pedido de Informação
+Dummy — classe mais frequente,27513,2,SPAM,SPAM
+TF-IDF palavras + regressão logística,22545,1,SPAM,SPAM
+TF-IDF palavras + regressão logística,22561,1,SPAM,SPAM
+TF-IDF palavras + regressão logística,25980,4,Pedido de Informação,Pedido de Encomenda
+TF-IDF palavras + regressão logística,26004,1,Pedido de Encomenda,Pedido de Informação
+TF-IDF palavras + regressão logística,26007,3,Pedido de Encomenda,Pedido de Informação
+TF-IDF palavras + regressão logística,26016,2,Pedido de Informação,Pedido de Encomenda
+TF-IDF palavras + regressão logística,26054,5,Pedido de Informação,Pedido de Informação
+TF-IDF palavras + regressão logística,26057,3,Pedido de Informação,Pedido de Informação
+TF-IDF palavras + regressão logística,26505,4,Pedido de Informação,SPAM
+TF-IDF palavras + regressão logística,26666,2,Pedido de Encomenda,Pedido de Informação
+TF-IDF palavras + regressão logística,26730,4,Pedido de Encomenda,Pedido de Informação
+TF-IDF palavras + regressão logística,26779,2,SPAM,SPAM
+TF-IDF palavras + regressão logística,26995,4,Pedido de Informação,Pedido de Encomenda
+TF-IDF palavras + regressão logística,27009,5,SPAM,Pedido de Informação
+TF-IDF palavras + regressão logística,27018,5,SPAM,Pedido de Informação
+TF-IDF palavras + regressão logística,27182,2,Pedido de Informação,SPAM
+TF-IDF palavras + regressão logística,27453,1,Pedido de Encomenda,SPAM
+TF-IDF palavras + regressão logística,27455,4,SPAM,Pedido de Informação
+TF-IDF palavras + regressão logística,27459,1,Pedido de Informação,Pedido de Informação
+TF-IDF palavras + regressão logística,27460,5,Pedido de Informação,Pedido de Informação
+TF-IDF palavras + regressão logística,27462,4,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF palavras + regressão logística,27464,3,SPAM,Pedido de Informação
+TF-IDF palavras + regressão logística,27466,3,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF palavras + regressão logística,27468,3,SPAM,Pedido de Encomenda
+TF-IDF palavras + regressão logística,27474,5,Pedido de Informação,SPAM
+TF-IDF palavras + regressão logística,27475,3,Pedido de Informação,Pedido de Encomenda
+TF-IDF palavras + regressão logística,27477,3,Pedido de Informação,Pedido de Informação
+TF-IDF palavras + regressão logística,27478,1,SPAM,SPAM
+TF-IDF palavras + regressão logística,27485,5,SPAM,SPAM
+TF-IDF palavras + regressão logística,27489,1,Pedido de Informação,SPAM
+TF-IDF palavras + regressão logística,27492,2,SPAM,Pedido de Encomenda
+TF-IDF palavras + regressão logística,27496,2,Pedido de Informação,SPAM
+TF-IDF palavras + regressão logística,27498,2,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF palavras + regressão logística,27499,3,SPAM,Pedido de Informação
+TF-IDF palavras + regressão logística,27500,1,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF palavras + regressão logística,27503,4,SPAM,Pedido de Informação
+TF-IDF palavras + regressão logística,27504,5,Pedido de Encomenda,SPAM
+TF-IDF palavras + regressão logística,27505,5,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF palavras + regressão logística,27507,4,SPAM,Pedido de Encomenda
+TF-IDF palavras + regressão logística,27510,1,SPAM,SPAM
+TF-IDF palavras + regressão logística,27513,2,SPAM,SPAM
+TF-IDF palavras + SVM linear,22545,1,SPAM,SPAM
+TF-IDF palavras + SVM linear,22561,1,SPAM,SPAM
+TF-IDF palavras + SVM linear,25980,4,Pedido de Informação,Pedido de Encomenda
+TF-IDF palavras + SVM linear,26004,1,Pedido de Encomenda,Pedido de Informação
+TF-IDF palavras + SVM linear,26007,3,Pedido de Encomenda,Pedido de Informação
+TF-IDF palavras + SVM linear,26016,2,Pedido de Informação,Pedido de Encomenda
+TF-IDF palavras + SVM linear,26054,5,Pedido de Informação,Pedido de Informação
+TF-IDF palavras + SVM linear,26057,3,Pedido de Informação,Pedido de Informação
+TF-IDF palavras + SVM linear,26505,4,Pedido de Informação,SPAM
+TF-IDF palavras + SVM linear,26666,2,Pedido de Encomenda,Pedido de Informação
+TF-IDF palavras + SVM linear,26730,4,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF palavras + SVM linear,26779,2,SPAM,SPAM
+TF-IDF palavras + SVM linear,26995,4,Pedido de Informação,Pedido de Encomenda
+TF-IDF palavras + SVM linear,27009,5,SPAM,SPAM
+TF-IDF palavras + SVM linear,27018,5,SPAM,SPAM
+TF-IDF palavras + SVM linear,27182,2,Pedido de Informação,SPAM
+TF-IDF palavras + SVM linear,27453,1,Pedido de Encomenda,SPAM
+TF-IDF palavras + SVM linear,27455,4,SPAM,Pedido de Informação
+TF-IDF palavras + SVM linear,27459,1,Pedido de Informação,Pedido de Informação
+TF-IDF palavras + SVM linear,27460,5,Pedido de Informação,Pedido de Informação
+TF-IDF palavras + SVM linear,27462,4,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF palavras + SVM linear,27464,3,SPAM,SPAM
+TF-IDF palavras + SVM linear,27466,3,Pedido de Encomenda,SPAM
+TF-IDF palavras + SVM linear,27468,3,SPAM,Pedido de Encomenda
+TF-IDF palavras + SVM linear,27474,5,Pedido de Informação,SPAM
+TF-IDF palavras + SVM linear,27475,3,Pedido de Informação,Pedido de Encomenda
+TF-IDF palavras + SVM linear,27477,3,Pedido de Informação,Pedido de Informação
+TF-IDF palavras + SVM linear,27478,1,SPAM,SPAM
+TF-IDF palavras + SVM linear,27485,5,SPAM,SPAM
+TF-IDF palavras + SVM linear,27489,1,Pedido de Informação,Pedido de Informação
+TF-IDF palavras + SVM linear,27492,2,SPAM,Pedido de Encomenda
+TF-IDF palavras + SVM linear,27496,2,Pedido de Informação,SPAM
+TF-IDF palavras + SVM linear,27498,2,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF palavras + SVM linear,27499,3,SPAM,Pedido de Informação
+TF-IDF palavras + SVM linear,27500,1,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF palavras + SVM linear,27503,4,SPAM,Pedido de Informação
+TF-IDF palavras + SVM linear,27504,5,Pedido de Encomenda,SPAM
+TF-IDF palavras + SVM linear,27505,5,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF palavras + SVM linear,27507,4,SPAM,Pedido de Encomenda
+TF-IDF palavras + SVM linear,27510,1,SPAM,SPAM
+TF-IDF palavras + SVM linear,27513,2,SPAM,SPAM
+TF-IDF caracteres + SVM linear,22545,1,SPAM,SPAM
+TF-IDF caracteres + SVM linear,22561,1,SPAM,SPAM
+TF-IDF caracteres + SVM linear,25980,4,Pedido de Informação,Pedido de Informação
+TF-IDF caracteres + SVM linear,26004,1,Pedido de Encomenda,Pedido de Informação
+TF-IDF caracteres + SVM linear,26007,3,Pedido de Encomenda,Pedido de Informação
+TF-IDF caracteres + SVM linear,26016,2,Pedido de Informação,Pedido de Encomenda
+TF-IDF caracteres + SVM linear,26054,5,Pedido de Informação,Pedido de Informação
+TF-IDF caracteres + SVM linear,26057,3,Pedido de Informação,Pedido de Informação
+TF-IDF caracteres + SVM linear,26505,4,Pedido de Informação,SPAM
+TF-IDF caracteres + SVM linear,26666,2,Pedido de Encomenda,Pedido de Informação
+TF-IDF caracteres + SVM linear,26730,4,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF caracteres + SVM linear,26779,2,SPAM,SPAM
+TF-IDF caracteres + SVM linear,26995,4,Pedido de Informação,Pedido de Encomenda
+TF-IDF caracteres + SVM linear,27009,5,SPAM,SPAM
+TF-IDF caracteres + SVM linear,27018,5,SPAM,SPAM
+TF-IDF caracteres + SVM linear,27182,2,Pedido de Informação,Pedido de Informação
+TF-IDF caracteres + SVM linear,27453,1,Pedido de Encomenda,SPAM
+TF-IDF caracteres + SVM linear,27455,4,SPAM,Pedido de Informação
+TF-IDF caracteres + SVM linear,27459,1,Pedido de Informação,Pedido de Informação
+TF-IDF caracteres + SVM linear,27460,5,Pedido de Informação,Pedido de Informação
+TF-IDF caracteres + SVM linear,27462,4,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF caracteres + SVM linear,27464,3,SPAM,SPAM
+TF-IDF caracteres + SVM linear,27466,3,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF caracteres + SVM linear,27468,3,SPAM,Pedido de Encomenda
+TF-IDF caracteres + SVM linear,27474,5,Pedido de Informação,SPAM
+TF-IDF caracteres + SVM linear,27475,3,Pedido de Informação,Pedido de Encomenda
+TF-IDF caracteres + SVM linear,27477,3,Pedido de Informação,Pedido de Informação
+TF-IDF caracteres + SVM linear,27478,1,SPAM,SPAM
+TF-IDF caracteres + SVM linear,27485,5,SPAM,SPAM
+TF-IDF caracteres + SVM linear,27489,1,Pedido de Informação,Pedido de Informação
+TF-IDF caracteres + SVM linear,27492,2,SPAM,Pedido de Encomenda
+TF-IDF caracteres + SVM linear,27496,2,Pedido de Informação,SPAM
+TF-IDF caracteres + SVM linear,27498,2,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF caracteres + SVM linear,27499,3,SPAM,Pedido de Informação
+TF-IDF caracteres + SVM linear,27500,1,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF caracteres + SVM linear,27503,4,SPAM,Pedido de Informação
+TF-IDF caracteres + SVM linear,27504,5,Pedido de Encomenda,SPAM
+TF-IDF caracteres + SVM linear,27505,5,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF caracteres + SVM linear,27507,4,SPAM,Pedido de Encomenda
+TF-IDF caracteres + SVM linear,27510,1,SPAM,SPAM
+TF-IDF caracteres + SVM linear,27513,2,SPAM,SPAM
+TF-IDF palavras + caracteres + SVM linear,22545,1,SPAM,SPAM
+TF-IDF palavras + caracteres + SVM linear,22561,1,SPAM,SPAM
+TF-IDF palavras + caracteres + SVM linear,25980,4,Pedido de Informação,Pedido de Encomenda
+TF-IDF palavras + caracteres + SVM linear,26004,1,Pedido de Encomenda,Pedido de Informação
+TF-IDF palavras + caracteres + SVM linear,26007,3,Pedido de Encomenda,Pedido de Informação
+TF-IDF palavras + caracteres + SVM linear,26016,2,Pedido de Informação,Pedido de Encomenda
+TF-IDF palavras + caracteres + SVM linear,26054,5,Pedido de Informação,Pedido de Informação
+TF-IDF palavras + caracteres + SVM linear,26057,3,Pedido de Informação,Pedido de Informação
+TF-IDF palavras + caracteres + SVM linear,26505,4,Pedido de Informação,SPAM
+TF-IDF palavras + caracteres + SVM linear,26666,2,Pedido de Encomenda,Pedido de Informação
+TF-IDF palavras + caracteres + SVM linear,26730,4,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF palavras + caracteres + SVM linear,26779,2,SPAM,SPAM
+TF-IDF palavras + caracteres + SVM linear,26995,4,Pedido de Informação,Pedido de Encomenda
+TF-IDF palavras + caracteres + SVM linear,27009,5,SPAM,SPAM
+TF-IDF palavras + caracteres + SVM linear,27018,5,SPAM,SPAM
+TF-IDF palavras + caracteres + SVM linear,27182,2,Pedido de Informação,Pedido de Informação
+TF-IDF palavras + caracteres + SVM linear,27453,1,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF palavras + caracteres + SVM linear,27455,4,SPAM,Pedido de Informação
+TF-IDF palavras + caracteres + SVM linear,27459,1,Pedido de Informação,Pedido de Informação
+TF-IDF palavras + caracteres + SVM linear,27460,5,Pedido de Informação,Pedido de Informação
+TF-IDF palavras + caracteres + SVM linear,27462,4,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF palavras + caracteres + SVM linear,27464,3,SPAM,SPAM
+TF-IDF palavras + caracteres + SVM linear,27466,3,Pedido de Encomenda,SPAM
+TF-IDF palavras + caracteres + SVM linear,27468,3,SPAM,Pedido de Encomenda
+TF-IDF palavras + caracteres + SVM linear,27474,5,Pedido de Informação,SPAM
+TF-IDF palavras + caracteres + SVM linear,27475,3,Pedido de Informação,Pedido de Encomenda
+TF-IDF palavras + caracteres + SVM linear,27477,3,Pedido de Informação,Pedido de Informação
+TF-IDF palavras + caracteres + SVM linear,27478,1,SPAM,SPAM
+TF-IDF palavras + caracteres + SVM linear,27485,5,SPAM,SPAM
+TF-IDF palavras + caracteres + SVM linear,27489,1,Pedido de Informação,Pedido de Informação
+TF-IDF palavras + caracteres + SVM linear,27492,2,SPAM,Pedido de Encomenda
+TF-IDF palavras + caracteres + SVM linear,27496,2,Pedido de Informação,SPAM
+TF-IDF palavras + caracteres + SVM linear,27498,2,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF palavras + caracteres + SVM linear,27499,3,SPAM,SPAM
+TF-IDF palavras + caracteres + SVM linear,27500,1,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF palavras + caracteres + SVM linear,27503,4,SPAM,Pedido de Informação
+TF-IDF palavras + caracteres + SVM linear,27504,5,Pedido de Encomenda,SPAM
+TF-IDF palavras + caracteres + SVM linear,27505,5,Pedido de Encomenda,Pedido de Encomenda
+TF-IDF palavras + caracteres + SVM linear,27507,4,SPAM,Pedido de Encomenda
+TF-IDF palavras + caracteres + SVM linear,27510,1,SPAM,SPAM
+TF-IDF palavras + caracteres + SVM linear,27513,2,SPAM,SPAM
+BERTimbau + SetFit (atual),22545,1,SPAM,SPAM
+BERTimbau + SetFit (atual),22561,1,SPAM,SPAM
+BERTimbau + SetFit (atual),25980,4,Pedido de Informação,Pedido de Encomenda
+BERTimbau + SetFit (atual),26004,1,Pedido de Encomenda,Pedido de Informação
+BERTimbau + SetFit (atual),26007,3,Pedido de Encomenda,Pedido de Informação
+BERTimbau + SetFit (atual),26016,2,Pedido de Informação,Pedido de Informação
+BERTimbau + SetFit (atual),26054,5,Pedido de Informação,Pedido de Informação
+BERTimbau + SetFit (atual),26057,3,Pedido de Informação,Pedido de Informação
+BERTimbau + SetFit (atual),26505,4,Pedido de Informação,SPAM
+BERTimbau + SetFit (atual),26666,2,Pedido de Encomenda,Pedido de Informação
+BERTimbau + SetFit (atual),26730,4,Pedido de Encomenda,Pedido de Encomenda
+BERTimbau + SetFit (atual),26779,2,SPAM,Pedido de Informação
+BERTimbau + SetFit (atual),26995,4,Pedido de Informação,Pedido de Informação
+BERTimbau + SetFit (atual),27009,5,SPAM,SPAM
+BERTimbau + SetFit (atual),27018,5,SPAM,SPAM
+BERTimbau + SetFit (atual),27182,2,Pedido de Informação,Pedido de Encomenda
+BERTimbau + SetFit (atual),27453,1,Pedido de Encomenda,Pedido de Encomenda
+BERTimbau + SetFit (atual),27455,4,SPAM,Pedido de Informação
+BERTimbau + SetFit (atual),27459,1,Pedido de Informação,Pedido de Informação
+BERTimbau + SetFit (atual),27460,5,Pedido de Informação,Pedido de Informação
+BERTimbau + SetFit (atual),27462,4,Pedido de Encomenda,Pedido de Encomenda
+BERTimbau + SetFit (atual),27464,3,SPAM,SPAM
+BERTimbau + SetFit (atual),27466,3,Pedido de Encomenda,SPAM
+BERTimbau + SetFit (atual),27468,3,SPAM,Pedido de Encomenda
+BERTimbau + SetFit (atual),27474,5,Pedido de Informação,Pedido de Informação
+BERTimbau + SetFit (atual),27475,3,Pedido de Informação,Pedido de Informação
+BERTimbau + SetFit (atual),27477,3,Pedido de Informação,Pedido de Informação
+BERTimbau + SetFit (atual),27478,1,SPAM,SPAM
+BERTimbau + SetFit (atual),27485,5,SPAM,SPAM
+BERTimbau + SetFit (atual),27489,1,Pedido de Informação,Pedido de Informação
+BERTimbau + SetFit (atual),27492,2,SPAM,Pedido de Encomenda
+BERTimbau + SetFit (atual),27496,2,Pedido de Informação,SPAM
+BERTimbau + SetFit (atual),27498,2,Pedido de Encomenda,Pedido de Encomenda
+BERTimbau + SetFit (atual),27499,3,SPAM,SPAM
+BERTimbau + SetFit (atual),27500,1,Pedido de Encomenda,Pedido de Encomenda
+BERTimbau + SetFit (atual),27503,4,SPAM,Pedido de Informação
+BERTimbau + SetFit (atual),27504,5,Pedido de Encomenda,Pedido de Informação
+BERTimbau + SetFit (atual),27505,5,Pedido de Encomenda,SPAM
+BERTimbau + SetFit (atual),27507,4,SPAM,Pedido de Encomenda
+BERTimbau + SetFit (atual),27510,1,SPAM,SPAM
+BERTimbau + SetFit (atual),27513,2,SPAM,Pedido de Encomenda

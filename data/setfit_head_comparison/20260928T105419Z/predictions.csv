@@ -1,0 +1,83 @@
+﻿model,uid,fold,label_real,label_prevista,score
+SetFit + Regressão Logística,22545,1,SPAM,SPAM,0.8106343746185303
+SetFit + Regressão Logística,22561,1,SPAM,SPAM,0.730337381362915
+SetFit + Regressão Logística,25980,4,Pedido de Informação,Pedido de Encomenda,0.9843530058860779
+SetFit + Regressão Logística,26004,1,Pedido de Encomenda,Pedido de Informação,0.9873976111412048
+SetFit + Regressão Logística,26007,3,Pedido de Encomenda,Pedido de Informação,0.997943103313446
+SetFit + Regressão Logística,26016,2,Pedido de Informação,Pedido de Informação,0.9632643461227417
+SetFit + Regressão Logística,26054,5,Pedido de Informação,Pedido de Informação,0.9983823299407959
+SetFit + Regressão Logística,26057,3,Pedido de Informação,Pedido de Informação,0.9984928369522095
+SetFit + Regressão Logística,26505,4,Pedido de Informação,SPAM,0.9776591658592224
+SetFit + Regressão Logística,26666,2,Pedido de Encomenda,Pedido de Informação,0.9952831864356995
+SetFit + Regressão Logística,26730,4,Pedido de Encomenda,Pedido de Encomenda,0.7820624709129333
+SetFit + Regressão Logística,26779,2,SPAM,Pedido de Informação,0.9964486360549927
+SetFit + Regressão Logística,26995,4,Pedido de Informação,Pedido de Informação,0.9911693334579468
+SetFit + Regressão Logística,27009,5,SPAM,SPAM,0.9978365302085876
+SetFit + Regressão Logística,27018,5,SPAM,SPAM,0.9977534413337708
+SetFit + Regressão Logística,27182,2,Pedido de Informação,Pedido de Encomenda,0.5935069918632507
+SetFit + Regressão Logística,27453,1,Pedido de Encomenda,Pedido de Encomenda,0.9973118305206299
+SetFit + Regressão Logística,27455,4,SPAM,Pedido de Informação,0.9868705868721008
+SetFit + Regressão Logística,27459,1,Pedido de Informação,Pedido de Informação,0.9986245632171631
+SetFit + Regressão Logística,27460,5,Pedido de Informação,Pedido de Informação,0.9978858828544617
+SetFit + Regressão Logística,27462,4,Pedido de Encomenda,Pedido de Encomenda,0.9957348704338074
+SetFit + Regressão Logística,27464,3,SPAM,SPAM,0.6226932406425476
+SetFit + Regressão Logística,27466,3,Pedido de Encomenda,SPAM,0.9970473647117615
+SetFit + Regressão Logística,27468,3,SPAM,Pedido de Encomenda,0.9732766151428223
+SetFit + Regressão Logística,27474,5,Pedido de Informação,Pedido de Informação,0.9947592616081238
+SetFit + Regressão Logística,27475,3,Pedido de Informação,Pedido de Informação,0.9783757328987122
+SetFit + Regressão Logística,27477,3,Pedido de Informação,Pedido de Informação,0.9976663589477539
+SetFit + Regressão Logística,27478,1,SPAM,SPAM,0.9893283247947693
+SetFit + Regressão Logística,27485,5,SPAM,SPAM,0.9982274174690247
+SetFit + Regressão Logística,27489,1,Pedido de Informação,Pedido de Informação,0.9985886216163635
+SetFit + Regressão Logística,27492,2,SPAM,Pedido de Encomenda,0.9974427223205566
+SetFit + Regressão Logística,27496,2,Pedido de Informação,SPAM,0.918214738368988
+SetFit + Regressão Logística,27498,2,Pedido de Encomenda,Pedido de Encomenda,0.9963524341583252
+SetFit + Regressão Logística,27499,3,SPAM,SPAM,0.9959089756011963
+SetFit + Regressão Logística,27500,1,Pedido de Encomenda,Pedido de Encomenda,0.9960208535194397
+SetFit + Regressão Logística,27503,4,SPAM,Pedido de Informação,0.9973310232162476
+SetFit + Regressão Logística,27504,5,Pedido de Encomenda,Pedido de Informação,0.9612786769866943
+SetFit + Regressão Logística,27505,5,Pedido de Encomenda,SPAM,0.915070116519928
+SetFit + Regressão Logística,27507,4,SPAM,Pedido de Encomenda,0.9881129860877991
+SetFit + Regressão Logística,27510,1,SPAM,SPAM,0.8019042611122131
+SetFit + Regressão Logística,27513,2,SPAM,Pedido de Encomenda,0.9175924062728882
+SetFit + SVM linear calibrado,22545,1,SPAM,SPAM,0.6476304178279425
+SetFit + SVM linear calibrado,22561,1,SPAM,SPAM,0.5930785088397409
+SetFit + SVM linear calibrado,25980,4,Pedido de Informação,Pedido de Encomenda,0.8347863207379826
+SetFit + SVM linear calibrado,26004,1,Pedido de Encomenda,Pedido de Informação,0.8541109352057743
+SetFit + SVM linear calibrado,26007,3,Pedido de Encomenda,Pedido de Informação,0.9116456702092629
+SetFit + SVM linear calibrado,26016,2,Pedido de Informação,Pedido de Informação,0.8096414930338696
+SetFit + SVM linear calibrado,26054,5,Pedido de Informação,Pedido de Informação,0.9162820871527423
+SetFit + SVM linear calibrado,26057,3,Pedido de Informação,Pedido de Informação,0.9183521924866999
+SetFit + SVM linear calibrado,26505,4,Pedido de Informação,SPAM,0.8326049704369565
+SetFit + SVM linear calibrado,26666,2,Pedido de Encomenda,Pedido de Informação,0.9057868887709823
+SetFit + SVM linear calibrado,26730,4,Pedido de Encomenda,Pedido de Encomenda,0.6049652184219145
+SetFit + SVM linear calibrado,26779,2,SPAM,Pedido de Informação,0.9053567875071546
+SetFit + SVM linear calibrado,26995,4,Pedido de Informação,Pedido de Informação,0.8559258373419085
+SetFit + SVM linear calibrado,27009,5,SPAM,SPAM,0.9185590490450158
+SetFit + SVM linear calibrado,27018,5,SPAM,SPAM,0.9173505096498094
+SetFit + SVM linear calibrado,27182,2,Pedido de Informação,Pedido de Encomenda,0.46866617073263706
+SetFit + SVM linear calibrado,27453,1,Pedido de Encomenda,Pedido de Encomenda,0.9008829987663994
+SetFit + SVM linear calibrado,27455,4,SPAM,Pedido de Informação,0.8384533309695017
+SetFit + SVM linear calibrado,27459,1,Pedido de Informação,Pedido de Informação,0.9173006142359602
+SetFit + SVM linear calibrado,27460,5,Pedido de Informação,Pedido de Informação,0.9117482483980609
+SetFit + SVM linear calibrado,27462,4,Pedido de Encomenda,Pedido de Encomenda,0.8870701806796586
+SetFit + SVM linear calibrado,27464,3,SPAM,SPAM,0.5237014120927854
+SetFit + SVM linear calibrado,27466,3,Pedido de Encomenda,SPAM,0.905600461047017
+SetFit + SVM linear calibrado,27468,3,SPAM,Pedido de Encomenda,0.8039227770883325
+SetFit + SVM linear calibrado,27474,5,Pedido de Informação,Pedido de Informação,0.8770592664785379
+SetFit + SVM linear calibrado,27475,3,Pedido de Informação,Pedido de Informação,0.8180648110109562
+SetFit + SVM linear calibrado,27477,3,Pedido de Informação,Pedido de Informação,0.9086554028340171
+SetFit + SVM linear calibrado,27478,1,SPAM,SPAM,0.8462298831548474
+SetFit + SVM linear calibrado,27485,5,SPAM,SPAM,0.9238734502171565
+SetFit + SVM linear calibrado,27489,1,Pedido de Informação,Pedido de Informação,0.9164728060030485
+SetFit + SVM linear calibrado,27492,2,SPAM,Pedido de Encomenda,0.9077439023629778
+SetFit + SVM linear calibrado,27496,2,Pedido de Informação,SPAM,0.7378308296882636
+SetFit + SVM linear calibrado,27498,2,Pedido de Encomenda,Pedido de Encomenda,0.9001517406256679
+SetFit + SVM linear calibrado,27499,3,SPAM,SPAM,0.9002041237359566
+SetFit + SVM linear calibrado,27500,1,Pedido de Encomenda,Pedido de Encomenda,0.8946785630930774
+SetFit + SVM linear calibrado,27503,4,SPAM,Pedido de Informação,0.8989536099039686
+SetFit + SVM linear calibrado,27504,5,Pedido de Encomenda,Pedido de Informação,0.7908554129649606
+SetFit + SVM linear calibrado,27505,5,Pedido de Encomenda,SPAM,0.7329206562673272
+SetFit + SVM linear calibrado,27507,4,SPAM,Pedido de Encomenda,0.849289448972032
+SetFit + SVM linear calibrado,27510,1,SPAM,SPAM,0.6517488238995721
+SetFit + SVM linear calibrado,27513,2,SPAM,Pedido de Encomenda,0.733107788494711

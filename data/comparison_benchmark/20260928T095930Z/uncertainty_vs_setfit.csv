@@ -1,0 +1,5 @@
+﻿Modelo vs SetFit,Delta accuracy,IC95% delta accuracy,Delta macro-F1,IC95% delta macro-F1
+TF-IDF palavras + regressão logística,-0.17239024390243904,"(np.float64(-0.341), np.float64(0.0))",-0.1596072879077714,"(np.float64(-0.339), np.float64(0.017))"
+TF-IDF palavras + SVM linear,-0.07307317073170731,"(np.float64(-0.22), np.float64(0.073))",-0.07309229327869962,"(np.float64(-0.217), np.float64(0.065))"
+TF-IDF caracteres + SVM linear,-0.001404878048780487,"(np.float64(-0.171), np.float64(0.171))",0.004336301495999865,"(np.float64(-0.159), np.float64(0.173))"
+TF-IDF palavras + caracteres + SVM linear,-0.0011268292682926832,"(np.float64(-0.146), np.float64(0.122))",0.000373380093091755,"(np.float64(-0.129), np.float64(0.132))"
